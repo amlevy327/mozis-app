@@ -17,10 +17,20 @@ function token(state = {}, action) {
   switch(action.type) {
     case 'TOKEN_CONTRACT_LOADED':
       return { ...state, loaded: true, contract: action.contract }
-    case 'OWNERSHIP_CHANGES_LOADED':
-      return { ...state, ownershipTransferred: { loaded: true, data: action.ownershipTransfers } }
+    case 'TOKEN_CONTRACT_OWNER_LOADED':
+      return { ...state, contractOwner: { loaded: true, address: action.contractOwner} }
+    case 'TRANSFER_SINGLES_LOADED':
+      return { ...state, transferSingles: { loaded: true, data: action.transferSingles } }
+    case 'ALL_NFTS_LOADED':
+      return { ...state, allNFTs: { loaded: true, data: action.allNFTs } }
+      /*
     case 'TOKEN_TRANSERRED_SINGLE':
       return { ...state, transferSingle: { loaded: true, data: action.transferSingles } }
+      */
+      /*
+    case 'TOKEN_CONTRACT_OWNER_LOADED':
+      return { ...state, owner: action.owner}
+      */
     default:
       return state
   }
@@ -35,7 +45,8 @@ function exchange(state = {}, action) {
     
     case 'LISTINGS_LOADED':
       return { ...state, allListings: { loaded: true, data: action.listings } }
-    case 'LISTING_CREATING':
+    /*
+      case 'LISTING_CREATING':
       return { ...state, listingCreating: true }
     case 'LISTING_CREATED':
       return {
@@ -49,10 +60,12 @@ function exchange(state = {}, action) {
           ]
         }
       }
-    
+    */
+
     case 'CANCELLED_LOADED':
       return { ...state, allCancelled: { loaded: true, data: action.cancelled } }
-    case 'LISTING_CANCELLING':
+    /*
+      case 'LISTING_CANCELLING':
       return { ...state, listingCancelling: true }
     case 'LISTING_CANCELLED':
       return {
@@ -66,10 +79,12 @@ function exchange(state = {}, action) {
           ]
         }
       }
-    
+    */
+   
     case 'SALES_LOADED':
-      return { ...state, allSales: { loaded: true, data: action.sale } }
-    case 'LISTING_PURCHASING':
+      return { ...state, allSales: { loaded: true, data: action.sales } }
+    /*
+      case 'LISTING_PURCHASING':
         return { ...state, listingPurchasing: true }
     case 'LISTING_PURCHASED':
       return {
@@ -83,9 +98,10 @@ function exchange(state = {}, action) {
           ]
         }
       }
-    
+    */
     default:
       return state
+    
   }
 }
 

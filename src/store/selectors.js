@@ -1,6 +1,13 @@
 import { get, reject } from 'lodash'
 import { createSelector } from 'reselect'
 
+const FRESH_MINT = '0x0000000000000000000000000000000000000000'
+
+// ACCOUNT
+
+const account = state => get(state, 'web3.account')
+export const accountSelector = createSelector(account, a => a)
+
 // TOKEN
 
 const token = state => get(state, 'token.contract')
@@ -8,6 +15,27 @@ export const tokenSelector = createSelector(token, t => t)
 
 const tokenLoaded = state => get(state, 'token.loaded')
 export const tokenLoadedSelector = createSelector(tokenLoaded, tl => tl)
+
+const tokenContractOwnerLoaded = state => get(state, 'token.contractOwner.loaded', false)
+export const tokenContractOwnerLoadedSelector = createSelector(tokenContractOwnerLoaded, tcol => tcol)
+
+const tokenContractOwner = state => get(state, 'token.contractOwner.address')
+export const tokenContractOwnerSelector = createSelector(tokenContractOwner, tco => tco)
+
+const allTransferSinglesLoaded = state => get(state, 'token.transferSingles.loaded', false)
+export const allTransferSinglesLoadedSelector = createSelector(allTransferSinglesLoaded, tsl => tsl)
+
+const allTransferSingles = state => get(state, 'token.transferSingles.data', [])
+
+const allNFTsLoaded = state => get(state, 'token.allNFTs.loaded', false)
+export const allNFTsLoadedSelector = createSelector(allNFTsLoaded, nftl => nftl)
+
+export const allNFTsSelector = createSelector(allTransferSingles, (allTransferSingles) => {
+  console.log('AML allNFTs pre filter: ', allTransferSingles.length)
+  const allNFTs = allTransferSingles.filter((t) => t.from === FRESH_MINT)
+  console.log('AML allNFTs post filter: ', allNFTs.length)
+  return allNFTs
+})
 
 // EXCHANGE
 

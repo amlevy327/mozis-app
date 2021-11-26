@@ -25,14 +25,15 @@ export function tokenContractLoaded(contract) {
   }
 }
 
-// events - past
-
-export function ownershipChangesLoaded(ownershipChanges) {
+// owner
+export function tokenContractOwnerLoaded(contractOwner) {
   return {
-    type: 'OWNERSHIP_CHANGES_LOADED',
-    ownershipChanges
+    type: 'TOKEN_CONTRACT_OWNER_LOADED',
+    contractOwner
   }
 }
+
+// events - past
 
 export function transferSinglesLoaded(transferSingles) {
   return {
@@ -41,6 +42,14 @@ export function transferSinglesLoaded(transferSingles) {
   }
 }
 
+export function allNFTsLoaded(allNFTs) {
+  return {
+    type: 'ALL_NFTS_LOADED',
+    allNFTs
+  }
+}
+
+/*
 // events - new
 
 export function ownershipChanged(ownershipTransfers) {
@@ -56,7 +65,7 @@ export function tokenTransferredSingle(transferSingles) {
     transferSingles
   }
 }
-
+*/
 // EXCHANGE
 
 // contract
@@ -90,7 +99,7 @@ export function salesLoaded(sales) {
     sales
   }
 }
-
+/*
 // events - new
 
 export function listingCreating() {
@@ -131,4 +140,4 @@ export function listingPurchased(sale) {
     sale
   }
 }
-
+*/
