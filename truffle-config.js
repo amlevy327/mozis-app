@@ -50,8 +50,8 @@ module.exports = {
     //
     development: {
      host: "127.0.0.1",     // Localhost (default: none)
-     port: 7545,            // CLI - Standard Ethereum port (default: none)
-     port: 8545,            // Desktop app - Standard Ethereum port (default: none)
+     port: 7545,            // App - Standard Ethereum port (default: none)
+     //port: 8545,            // cli - Standard Ethereum port (default: none)
      network_id: "*",       // Any network (default: none)
     },
     kovan: {

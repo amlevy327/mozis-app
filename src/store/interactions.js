@@ -4,20 +4,24 @@ import {
   web3Loaded,
   web3AccountLoaded,
   tokenContractLoaded,
+  //tokenContractOwnerLoaded,
   exchangeContractLoaded,
-  ownershipChangesLoaded,
+  tokenContractOwnerLoaded,
   transferSinglesLoaded,
+  allNFTsLoaded,
   listingsLoaded,
   cancelledLoaded,
   salesLoaded,
+  /*
   ownershipChanged,
   tokenTransferredSingle,
   listingCreated,
   listingCancelled,
   listingPurchased
+  */
 } from './actions.js'
-import Token from '../contracts/Token.sol'
-import Exchange from '../contracts/Exchange.sol'
+import Token from '../abis/Token.json'
+import Exchange from '../abis/Exchange.json'
 
 // WEB3
 
@@ -71,6 +75,22 @@ export const loadExchangeContract = async (web3, networkId, dispatch) => {
   }
 }
 
+/*
+// TOKEN CONTRACT OWNER
+export const loadTokenContractOwner = async (token, dispatch) => {
+  try {
+    const tokenContractOwner = await token.methods.owner()
+    //const tokenContractOwner = await token.owner()
+    console.log('TOKEN OWNER: ', tokenContractOwner)
+    dispatch(tokenContractOwnerLoaded(tokenContractOwner))
+    return tokenContractOwner
+  } catch (error) {
+    console.log('Contract not deployed to the current network. Please select another network with Metamask.') // TODO: change this?
+    return null
+  }
+} 
+*/
+
 // GET 
 
 // get token uri
@@ -92,11 +112,12 @@ export const loadExchangeContract = async (web3, networkId, dispatch) => {
 // EVENTS
 
 // load token contract owner change
-export const loadTokenContractOwnershipChanges = async (token, dispatch) => {
+export const loadTokenContractOwner = async (token, dispatch) => {
   const ownershipChangesStream = await token.getPastEvents('OwnershipTransferred', { fromBlock: 0, toBlock: 'latest' })
   console.log('ownerships stream: ', ownershipChangesStream)
-  const ownershipChanges = ownershipChangesStream.map((event) => event.returnValues)
-  dispatch(ownershipChangesLoaded(ownershipChanges))
+  const contractOwner = ownershipChangesStream[ownershipChangesStream.length - 1].returnValues.newOwner
+  console.log('contractOwner: ', contractOwner)
+  dispatch(tokenContractOwnerLoaded(contractOwner))
 }
 
 // load TransferSingle from ERC1155
@@ -105,6 +126,10 @@ export const loadTokenTransferSingles = async (token, dispatch) => {
   console.log('transferSingles stream: ', transferSinglesStream)
   const transferSingles = transferSinglesStream.map((event) => event.returnValues)
   dispatch(transferSinglesLoaded(transferSingles))
+
+  console.log('AML all NFTs', transferSingles.filter((t) => t.from === '0x0000000000000000000000000000000000000000'))
+
+  dispatch(allNFTsLoaded(transferSingles.filter((t) => t.from === '0x0000000000000000000000000000000000000000')))
 }
 
 // load listings
@@ -130,7 +155,7 @@ export const loadSales = async (exchange, dispatch) => {
   const sales = salesStream.map((event) => event.returnValues)
   dispatch(salesLoaded(sales))
 }
-
+/*
 // TODO: load BATCH TRANSFER from ERC1155
 
 // subscribe - listings, cancelled, sales, token contract owner change, TransferSingle from ERC1155
@@ -155,3 +180,4 @@ export const subscribeToEvents = async (token, exchange, dispatch) => {
     dispatch(listingPurchased(event.returnValues))
   })
 }
+*/

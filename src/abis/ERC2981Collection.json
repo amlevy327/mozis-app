@@ -96,7 +96,7 @@
         2753
       ],
       "IERC2981": [
-        3343
+        3310
       ]
     },
     "id": 2806,
@@ -123,7 +123,7 @@
         "id": 2756,
         "nodeType": "ImportDirective",
         "scope": 2806,
-        "sourceUnit": 3344,
+        "sourceUnit": 3311,
         "src": "66:34:14",
         "symbolAliases": [],
         "unitAlias": ""
@@ -136,7 +136,7 @@
               "id": 2757,
               "name": "IERC2981",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 3343,
+              "referencedDeclaration": 3310,
               "src": "141:8:14"
             },
             "id": 2758,
@@ -146,14 +146,14 @@
         ],
         "contractDependencies": [
           2753,
-          3343
+          3310
         ],
         "contractKind": "contract",
         "fullyImplemented": false,
         "id": 2805,
         "linearizedBaseContracts": [
           2805,
-          3343,
+          3310,
           2753
         ],
         "name": "ERC2981Collection",
@@ -388,7 +388,7 @@
           },
           {
             "baseFunctions": [
-              3342
+              3309
             ],
             "body": {
               "id": 2803,
@@ -562,7 +562,7 @@
                   "id": 2784,
                   "name": "IERC2981",
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 3343,
+                  "referencedDeclaration": 3310,
                   "src": "796:8:14"
                 }
               ],
@@ -710,7 +710,7 @@
         2753
       ],
       "IERC2981": [
-        3343
+        3310
       ]
     },
     "id": 2806,
@@ -737,7 +737,7 @@
         "id": 2756,
         "nodeType": "ImportDirective",
         "scope": 2806,
-        "sourceUnit": 3344,
+        "sourceUnit": 3311,
         "src": "66:34:14",
         "symbolAliases": [],
         "unitAlias": ""
@@ -750,7 +750,7 @@
               "id": 2757,
               "name": "IERC2981",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 3343,
+              "referencedDeclaration": 3310,
               "src": "141:8:14"
             },
             "id": 2758,
@@ -760,14 +760,14 @@
         ],
         "contractDependencies": [
           2753,
-          3343
+          3310
         ],
         "contractKind": "contract",
         "fullyImplemented": false,
         "id": 2805,
         "linearizedBaseContracts": [
           2805,
-          3343,
+          3310,
           2753
         ],
         "name": "ERC2981Collection",
@@ -1002,7 +1002,7 @@
           },
           {
             "baseFunctions": [
-              3342
+              3309
             ],
             "body": {
               "id": 2803,
@@ -1176,7 +1176,7 @@
                   "id": 2784,
                   "name": "IERC2981",
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 3343,
+                  "referencedDeclaration": 3310,
                   "src": "796:8:14"
                 }
               ],
@@ -1320,7 +1320,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-11-26T02:19:09.392Z",
+  "updatedAt": "2021-11-26T03:45:25.621Z",
   "devdoc": {
     "kind": "dev",
     "methods": {
