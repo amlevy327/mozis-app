@@ -4,7 +4,8 @@ import './App.css'
 // import {
 // } from '../store/interactions'
 import {
-  allTransferSinglesLoadedSelector
+  allTransferSinglesLoadedSelector,
+  allListingTypesLoadedSelector
 } from '../store/selectors'
 import Spinner from './Spinner'
 import AllNFTs from './AllNFTs'
@@ -32,9 +33,10 @@ class ContentBrandOwner extends Component {
 
 function mapStateToProps(state) {
   const allTransferSinglesLoaded = allTransferSinglesLoadedSelector(state)
+  const allListingTypesLoaded = allListingTypesLoadedSelector(state)
   
   return {
-    showAllNFTsComponent: allTransferSinglesLoaded
+    showAllNFTsComponent: allTransferSinglesLoaded && allListingTypesLoaded
   }
 }
 

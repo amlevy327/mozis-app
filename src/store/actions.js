@@ -49,15 +49,16 @@ export function allNFTsLoaded(allNFTs) {
   }
 }
 
-/*
 // events - new
 
+/*
 export function ownershipChanged(ownershipTransfers) {
   return {
     type: 'OWNERSHIP_CHANGED',
     ownershipTransfers
   }
 }
+*/
 
 export function tokenTransferredSingle(transferSingles) {
   return {
@@ -65,7 +66,48 @@ export function tokenTransferredSingle(transferSingles) {
     transferSingles
   }
 }
-*/
+
+// ROYALTY PAYMENTS
+
+// contract
+
+export function royaltyPaymentsContractLoaded(contract) {
+  return {
+    type: 'ROYALTY_PAYMENTS_CONTRACT_LOADED',
+    contract
+  }
+}
+
+// royalty percent
+
+export function royaltyPercentLoaded(royaltyPercent) {
+  return {
+    type: 'ROYALTY_PERCENT_LOADED',
+    royaltyPercent
+  }
+}
+
+export function payeesAdded(payees) {
+  return {
+    type: 'PAYEES_ADDED_LOADED',
+    payees
+  }
+}
+
+export function paymentReceived(received) {
+  return {
+    type: 'PAYMENT_RECEIVED_LOADED',
+    received
+  }
+}
+
+export function paymentReleased(released) {
+  return {
+    type: 'PAYMENT_RELEASED_LOADED',
+    released
+  }
+}
+
 // EXCHANGE
 
 // contract
@@ -99,9 +141,9 @@ export function salesLoaded(sales) {
     sales
   }
 }
-/*
-// events - new
 
+// events - new
+/*
 export function listingCreating() {
   return {
     type: 'LISTING_CREATING'
@@ -114,6 +156,7 @@ export function listingCreated(listing) {
     listing
   }
 }
+*/
 
 export function listingCancelling() {
   return {
@@ -140,4 +183,3 @@ export function listingPurchased(sale) {
     sale
   }
 }
-*/
