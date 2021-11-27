@@ -16,6 +16,9 @@ export const tokenSelector = createSelector(token, t => t)
 const tokenLoaded = state => get(state, 'token.loaded')
 export const tokenLoadedSelector = createSelector(tokenLoaded, tl => tl)
 
+const royaltyPercent = state => get(state, 'token.royaltyPercent')
+export const royaltyPercentSelector = createSelector(royaltyPercent, rp => rp)
+
 const tokenContractOwnerLoaded = state => get(state, 'token.contractOwner.loaded', false)
 export const tokenContractOwnerLoadedSelector = createSelector(tokenContractOwnerLoaded, tcol => tcol)
 
@@ -25,17 +28,46 @@ export const tokenContractOwnerSelector = createSelector(tokenContractOwner, tco
 const allTransferSinglesLoaded = state => get(state, 'token.transferSingles.loaded', false)
 export const allTransferSinglesLoadedSelector = createSelector(allTransferSinglesLoaded, tsl => tsl)
 
+
 const allTransferSingles = state => get(state, 'token.transferSingles.data', [])
-
-const allNFTsLoaded = state => get(state, 'token.allNFTs.loaded', false)
-export const allNFTsLoadedSelector = createSelector(allNFTsLoaded, nftl => nftl)
-
-export const allNFTsSelector = createSelector(allTransferSingles, (allTransferSingles) => {
-  console.log('AML allNFTs pre filter: ', allTransferSingles.length)
+/*
+// TODO: Keep to use transfer single events when tracking other marketplaces
+export const myNFTsSelector = createSelector(allTransferSingles, account, (allTransferSingles, account) => {
   const allNFTs = allTransferSingles.filter((t) => t.from === FRESH_MINT)
-  console.log('AML allNFTs post filter: ', allNFTs.length)
-  return allNFTs
+  const myNFTs = decorateMyNFTs(allTransferSingles, allNFTs, account)
+  return myNFTs
 })
+
+const decorateMyNFTs = (allTransferSingles, allNFTs, account) => {
+  return(
+    allNFTs.map((nft) => {
+      nft = addCurrentValue(allTransferSingles, nft, account)
+      return nft
+    })
+  )
+}
+
+const addCurrentValue = (allTransferSingles, nft, account) => {
+  let currentValue = 0
+
+  const filteredTransferSingles = allTransferSingles.filter((t) => t.id === nft.id)
+
+  for(let i=0;i<filteredTransferSingles.length;i++){
+    if(account === filteredTransferSingles[i].to) {
+      currentValue += filteredTransferSingles[i].value
+    }
+    if(account === filteredTransferSingles[i].from) {
+      currentValue -= filteredTransferSingles[i].value
+    }
+  }
+
+  return({
+    ...nft,
+    currentValue
+  })
+}
+*/
+
 
 // EXCHANGE
 
@@ -68,13 +100,78 @@ const listingPurchasing = state => get(state, 'exchange.listingPurchasing', fals
 export const listingPurchasingSelector = createSelector(listingPurchasing, status => status)
 
 const allListings = state => get(state, 'exchange.allListings.data', [])
-const allCancelled = state => get(state, 'exchange.allCancelleddata', [])
+const allCancelled = state => get(state, 'exchange.allCancelled.data', [])
 const allSales = state => get(state, 'exchange.allSales.data', [])
 
-const allOpenListings = state => {
-  const listings = allListings
-  const cancelled = allCancelled
-  const sales = allSales
+export const allOpenListingsSelector = createSelector(allListings, allCancelled, allSales, account, royaltyPercent, (listings, cancelled, sales, account, royaltyPercent) => {
+  let allOpenListings = reject(listings, (listing) => {
+    const listingCancelled = cancelled.some((l) => l.listingId === listing.listingId)
+    const listingSold = sales.some((l) => l.listingId === listing.listingId)
+    return (listingCancelled || listingSold)
+  })
+
+  console.log('AML allOpenListings: ', allOpenListings)
+
+  allOpenListings = decorateOpenListings(allOpenListings, account, royaltyPercent)
+
+  console.log('AML allOpenListings decorated: ', allOpenListings)
+
+  return allOpenListings
+})
+
+const decorateOpenListings = (allOpenListings, account, royaltyPercent) => {
+  return(
+    allOpenListings.map((listing) => {
+      listing = addButtonText(listing, account)
+      listing = addRoyaltyAmount(listing, royaltyPercent)
+      listing = addTotalCost(listing)
+      return listing
+    })
+  )
+}
+
+const addButtonText = (listing, account) => {
+  let buttonText
+
+  if (listing.seller === account) {
+    buttonText = "Cancel"
+  } else {
+    buttonText = "Buy"
+  }
+
+  return({
+    ...listing,
+    buttonText
+  })
+}
+
+const addRoyaltyAmount = (listing, royaltyPercent) => {
+  const royaltyAmount = parseInt(listing.price) * royaltyPercent / 10000
+
+  return({
+    ...listing,
+    royaltyAmount
+  })
+}
+
+const addTotalCost = (listing) => {
+  const totalCost = parseInt(listing.price) + parseInt(listing.royaltyAmount)
+
+  return({
+    ...listing,
+    totalCost
+  })
+}
+
+// TODO: move
+
+const allNFTsLoaded = state => get(state, 'token.allNFTs.loaded', false)
+export const allNFTsLoadedSelector = createSelector(allNFTsLoaded, nftl => nftl)
+
+export const allNFTsSelector = createSelector(allTransferSingles, allListings, allCancelled, allSales, (allTransferSingles, listings, cancelled, sales) => {
+  console.log('AML allNFTs pre filter: ', allTransferSingles.length)
+  let allNFTs = allTransferSingles.filter((t) => t.from === FRESH_MINT)
+  console.log('AML allNFTs post filter: ', allNFTs.length)
 
   let allOpenListings = reject(listings, (listing) => {
     const listingCancelled = cancelled.some((l) => l.listingId === listing.listingId)
@@ -82,9 +179,87 @@ const allOpenListings = state => {
     return (listingCancelled || listingSold)
   })
 
-  return allOpenListings
+  console.log('AML allNFTs allOpenListings: ', allOpenListings.length)
+
+  allNFTs = decorateAllNFTs(allNFTs, allOpenListings)
+  
+  return allNFTs
+})
+
+const decorateAllNFTs = (allNFTs, allOpenListings) => {
+  return(
+    allNFTs.map((nft) => {
+      console.log('AML allNFTs nft.id: ', nft.id)
+      nft = addNumberForSale(nft, allOpenListings)
+      return nft
+    })
+  )
 }
 
-export const allOpenListingsSelector = createSelector(allOpenListings, aol => aol)
+const addNumberForSale = (nft, allOpenListings) => {
+  let numberForSale = 0
 
-// decorate orders
+  for(let i=0;i<allOpenListings.length;i++){
+    console.log('AML allNFTs allOpenListings[i].value: ', allOpenListings[i].value)
+    console.log('AML allNFTs allOpenListings[i].tokenId: ', allOpenListings[i].tokenId)
+    if(nft.id === allOpenListings[i].tokenId) {
+      numberForSale += parseInt(allOpenListings[i].value)
+    }
+  }
+
+  return({
+    ...nft,
+    numberForSale
+  })
+}
+
+// TODO: move
+
+export const myNFTsSelector = createSelector(allTransferSingles, allSales, account, allListings, allCancelled, (allTransferSingles, sales, account, listings, cancelled) => {
+  const allNFTs = allTransferSingles.filter((t) => t.from === FRESH_MINT)
+
+  let allOpenListings = reject(listings, (listing) => {
+    const listingCancelled = cancelled.some((l) => l.listingId === listing.listingId)
+    const listingSold = sales.some((l) => l.listingId === listing.listingId)
+    return (listingCancelled || listingSold)
+  })
+
+  const myNFTs = decorateMyNFTs(sales, allNFTs, account, allOpenListings)
+  return myNFTs
+})
+
+const decorateMyNFTs = (allSales, allNFTs, account, allOpenListings) => {
+  return(
+    allNFTs.map((nft) => {
+      nft = addNumberForSale(nft, allOpenListings)
+      nft = addCurrentValue(allSales, nft, account, allNFTs)
+      return nft
+    })
+  )
+}
+
+const addCurrentValue = (allSales, nft, account, allNFTs) => {
+  let currentValue = 0
+
+  const filteredSales = allSales.filter((s) => s.tokenId === nft.id)
+
+  for(let i=0;i<filteredSales.length;i++){
+    if(account === filteredSales[i].to) {
+      currentValue += parseInt(filteredSales[i].value)
+    }
+    if(account === filteredSales[i].from) {
+      currentValue -= parseInt(filteredSales[i].value)
+    }
+  }
+
+  for(let i=0;i<allNFTs.length;i++){
+    if(account === allNFTs[i].to && nft.id == allNFTs[i].id) {
+      currentValue += parseInt(allNFTs[i].value)
+    }
+  }
+
+  return({
+    ...nft,
+    currentValue
+  })
+}

@@ -5,12 +5,17 @@ import {
   loadWeb3,
   loadAccount,
   loadTokenContract,
+  loadRoyaltyPaymentsContract,
   loadExchangeContract,
   loadTokenContractOwner,
   loadTokenTransferSingles,
   loadCancelled,
   loadSales,
-  loadListings
+  loadListings,
+  subscribeToEvents,
+  getRoyaltyPercent,
+  loadPayeesAdded,
+  loadPaymentsReleased
 } from '../store/interactions'
 import {
   accountSelector,
@@ -22,15 +27,13 @@ import {
 import Navbar from './Navbar'
 import Spinner from './Spinner'
 import ContentBrandOwner from './ContentBrandOwner'
+import ContentBrandCustomer from './ContentBrandCustomer'
 
 const showContent = (props) => {
   const {
     account,
     owner
   } = props
-
-  console.log('AML showContent account: ', account)
-  console.log('AML showContent tokenContractOwner: ', owner)
 
   if(account === owner){
     return(
@@ -41,17 +44,27 @@ const showContent = (props) => {
     )
   } else {
     return(
-      console.log("AML no not owner")
+      //console.log("AML no not owner")
+      <div className="content">
+        <ContentBrandCustomer />
+      </div>
     )
   }
 }
 
 class App extends Component {
   componentWillMount() {
-    this.loadBlockchainData(this.props.dispatch)
+    //this.loadBlockchainData(this.props.dispatch)
+    this.loadBlockchainData(this.props)
   }
 
-  async loadBlockchainData(dispatch) {
+  async loadBlockchainData(props) {
+    const {
+      account,
+      dispatch
+    } = props
+
+
     await window.ethereum.enable() // not sure if need this?
     const web3 = await loadWeb3(dispatch)
     const networkId = await web3.eth.net.getId()
@@ -61,6 +74,11 @@ class App extends Component {
     const token = await loadTokenContract(web3, networkId, dispatch)
     if (!token) {
       window.alert('Token smart contract not detected on the current network. Please select another network with Metamask.')
+    }
+
+    const royaltyPayments = await loadRoyaltyPaymentsContract(web3, networkId, dispatch)
+    if (!royaltyPayments) {
+      window.alert('RoyaltyPayments smart contract not detected on the current network. Please select another network with Metamask.')
     }
 
     const exchange = await loadExchangeContract(web3, networkId, dispatch)
@@ -73,6 +91,10 @@ class App extends Component {
     await loadListings(exchange, dispatch)
     await loadCancelled(exchange, dispatch)
     await loadSales(exchange, dispatch)
+    await subscribeToEvents(token, exchange, royaltyPayments, dispatch)
+    await getRoyaltyPercent(token, account, dispatch)
+    await loadPayeesAdded(royaltyPayments, dispatch)
+    await loadPaymentsReleased(royaltyPayments, dispatch)
   }
 
   render() {

@@ -4,14 +4,22 @@ import { Tab, Tabs } from 'react-bootstrap'
 import Spinner from './Spinner'
 import {
   allNFTsSelector,
-  allNFTsLoadedSelector
+  allNFTsLoadedSelector,
+  allListingTypesLoadedSelector,
+  allOpenListingsSelector,
+  accountSelector,
+  exchangeSelector,
+  myNFTsSelector
 } from '../store/selectors'
 // import {
 // } from '../store/selectors'
-// import {
-// } from '../store/interactions'
+import {
+  cancelListing,
+  purchaseListing
+} from '../store/interactions'
 // import {
 // } from '../store/actions'
+import { ether } from '../helpers.js'
 
 const showAllNFTs = (props) => {
   const {
@@ -28,15 +36,90 @@ const showAllNFTs = (props) => {
             </td>
             <td>{nft.id}</td>
             <td>{nft.value}</td>
+            <td>{nft.numberForSale}</td>
+          </tr>
+        )
+      })
+      }
+    </tbody>
+  )
+}
+
+const showAllOpenListings = (props) => {
+  const {
+    allOpenListings
+  } = props
+
+  return(
+    <tbody>
+      { allOpenListings.map((listing) => {
+        return(
+          <tr className={`listing-${listing.listingId}`} key={listing.listingId}>
+            <td>
+              {/* <img src={art.tokenURI} alt="N/A" width="100" height="100"></img> */}
+            </td>
+            <td>{listing.listingId}</td>
+            <td>{listing.value}</td>
+            <td>{listing.seller}</td>
+            <td>{ether(listing.price)}</td>
+            <td>{ether(listing.royaltyAmount)}</td>
+            <td>{ether(listing.totalCost)}</td>
             <td
                 className="text-muted cancel-order"
                 onClick={(e) => {
-                  console.log('button click: STATUS')
-                  // purchaseArt(dispatch, artFactory, tokens, art, account, totalPrice)
+                  completeListingAction(props, listing)
                 }}
-            >STATUS</td>
+            >{listing.buttonText}</td>
           </tr>
         )
+      })
+      }
+    </tbody>
+  )
+}
+
+const completeListingAction = (props, listing) => {
+  const {
+    account,
+    exchange,
+    dispatch
+  } = props
+
+  switch(listing.buttonText) {
+    case "Cancel":
+      console.log("AML cancel button text action")
+      cancelListing(dispatch, account, exchange, listing)
+      break
+    case "Buy":
+      console.log("AML buy button text action")
+      purchaseListing(dispatch, account, exchange, listing)
+      break
+    default:
+      console.log("AML no button text action")
+  }
+}
+
+const showMyNFTs = (props) => {
+  const {
+    myNFTs
+  } = props
+
+  return(
+    <tbody>
+      { myNFTs.map((nft) => {
+        if (nft.currentValue > 0) {
+          return(
+            <tr className={`nft-${nft.id}`} key={nft.id}>
+              <td>
+                {/* <img src={art.tokenURI} alt="N/A" width="100" height="100"></img> */}
+              </td>
+              <td>{nft.id}</td>
+              <td>{nft.currentValue}</td>
+              <td>{nft.value}</td>
+              <td>{nft.numberForSale}</td>
+            </tr>
+          )
+        }
       })
       }
     </tbody>
@@ -48,37 +131,54 @@ class AllNFTs extends Component {
     return (
       <div className="card bg-dark text-white">
         <div className="card-header">
-            Brand NFTs
+            Mozis
         </div>
         <div className="card-body">
-          <Tabs defaultActiveKey="sale" className="bg-dark text-white">
-            <Tab eventKey="sale" title="All" className="bg-dark">
+          <Tabs defaultActiveKey="collection" className="bg-dark text-white">
+            <Tab eventKey="collection" title="Collection" className="bg-dark">
               <table className="table table-dark table-sm small">
                 <thead>
                   <tr>
                     <th>Image</th>
                     <th>ID</th>
-                    <th>Value</th>
-                    <th>Action</th>
+                    <th># Minted</th>
+                    <th># For Sale</th>
                   </tr>
                 </thead>
-                { showAllNFTs(this.props) }
-                {/* { this.props.showAll ? showAllNFTs(this.props) : <Spinner type="table"/> } */}
+                { this.props.allNFTsLoaded ? showAllNFTs(this.props) : <Spinner type="table"/> }
               </table>
             </Tab>
-            {/* <Tab eventKey="order" title="Create Order" className="bg-dark">
+            <Tab eventKey="marketplace" title="Marketplace" className="bg-dark">
               <table className="table table-dark table-sm small">
                 <thead>
                   <tr>
-                    <th></th>
-                    <th>Gen</th>
-                    <th></th>
+                    <th>Image</th>
+                    <th>Listing ID</th>
+                    <th># For Sale</th>
+                    <th>Seller</th>
+                    <th>Price (eth)</th>
+                    <th>Royalty Amount (eth)</th>
+                    <th>Total Cost (eth)</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
-                { this.props.showAll ? showCreateOrder(this.props) : <Spinner type="table"/> }
+                { this.props.allListingTypesLoaded ? showAllOpenListings(this.props) : <Spinner type="table"/> }
               </table>
-              { this.props.showAll ? showNumLegaciesForm(this.props) : <Spinner type="table"/> }
-            </Tab> */}
+            </Tab>
+            <Tab eventKey="my" title="My NFTs" className="bg-dark">
+              <table className="table table-dark table-sm small">
+                <thead>
+                  <tr>
+                    <th>Image</th>
+                    <th>ID</th>
+                    <th># Owned</th>
+                    <th># Minted</th>
+                    <th># For Sale</th>
+                  </tr>
+                </thead>
+                { this.props.allListingTypesLoaded ? showMyNFTs(this.props) : <Spinner type="table"/> }
+              </table>
+            </Tab>
           </Tabs>
         </div>
       </div>
@@ -89,7 +189,12 @@ class AllNFTs extends Component {
 function mapStateToProps(state) {
   return {
     allNFTsLoaded: allNFTsLoadedSelector(state),
-    allNFTs: allNFTsSelector(state)
+    allNFTs: allNFTsSelector(state),
+    allListingTypesLoaded: allListingTypesLoadedSelector(state),
+    allOpenListings: allOpenListingsSelector(state),
+    account: accountSelector(state),
+    exchange: exchangeSelector(state),
+    myNFTs: myNFTsSelector(state)
   }
 }
 

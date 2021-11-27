@@ -52,6 +52,10 @@ module.exports = async function(callback) {
     )
     console.log('Exchange fetched')
 
+    // transfer ownership of token contract to artist
+    await token.transferOwnership(artist, { from: mozisDeployer })
+    console.log('Ownership transferred to artist')
+
     // approve exchange to move tokens - artist
     await token.setApprovalForAll(exchange.address, true, { from: artist })
     console.log('Exchange approved by artist')
@@ -59,11 +63,15 @@ module.exports = async function(callback) {
     // create listings
     await exchange.createListing(token.address, 0, 1, web3.utils.toWei('1', 'ether'), { from: artist })
     await wait(1)
-    console.log('listing 1 created- value: 1, price: 1eth')
+    console.log('listing 1 created- tokenId: 0, value: 1, price: 1eth')
 
-    await exchange.createListing(token.address, 0, 1, web3.utils.toWei('2', 'ether'), { from: artist })
+    await exchange.createListing(token.address, 1, 1, web3.utils.toWei('2', 'ether'), { from: artist })
     await wait(1)
-    console.log('listing 2 created- value: 1, price: 2eth')
+    console.log('listing 2 created- tokenId: 1, value: 1, price: 2eth')
+
+    // cancel listing
+    // await exchange.cancelListing(1, { from: artist })
+    // console.log('listing 1 cancelled')
 
   } catch (error) {
     console.log(error)

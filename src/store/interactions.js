@@ -6,22 +6,30 @@ import {
   tokenContractLoaded,
   //tokenContractOwnerLoaded,
   exchangeContractLoaded,
+  royaltyPaymentsContractLoaded,
   tokenContractOwnerLoaded,
+  royaltyPercentLoaded,
   transferSinglesLoaded,
   allNFTsLoaded,
   listingsLoaded,
   cancelledLoaded,
   salesLoaded,
+  listingCancelling,
+  listingCancelled,
+  listingPurchasing,
+  listingPurchased,
+  tokenTransferredSingle,
+  payeesAdded,
+  paymentReleased,
+  paymentReceived
   /*
   ownershipChanged,
-  tokenTransferredSingle,
   listingCreated,
-  listingCancelled,
-  listingPurchased
   */
 } from './actions.js'
 import Token from '../abis/Token.json'
 import Exchange from '../abis/Exchange.json'
+import RoyaltyPayments from '../abis/RoyaltyPayments.json'
 
 // WEB3
 
@@ -64,6 +72,18 @@ export const loadTokenContract = async (web3, networkId, dispatch) => {
   }
 }
 
+export const loadRoyaltyPaymentsContract = async (web3, networkId, dispatch) => {
+  try {
+    const royaltyPayments = new web3.eth.Contract(RoyaltyPayments.abi, RoyaltyPayments.networks[networkId].address)
+    dispatch(royaltyPaymentsContractLoaded(royaltyPayments))
+    return royaltyPayments
+  } catch (error) {
+    console.log('Contract not deployed to the current network. Please select another network with Metamask.')
+    return null
+  }
+}
+
+
 export const loadExchangeContract = async (web3, networkId, dispatch) => {
   try {
     const exchange = new web3.eth.Contract(Exchange.abi, Exchange.networks[networkId].address)
@@ -75,23 +95,15 @@ export const loadExchangeContract = async (web3, networkId, dispatch) => {
   }
 }
 
-/*
-// TOKEN CONTRACT OWNER
-export const loadTokenContractOwner = async (token, dispatch) => {
-  try {
-    const tokenContractOwner = await token.methods.owner()
-    //const tokenContractOwner = await token.owner()
-    console.log('TOKEN OWNER: ', tokenContractOwner)
-    dispatch(tokenContractOwnerLoaded(tokenContractOwner))
-    return tokenContractOwner
-  } catch (error) {
-    console.log('Contract not deployed to the current network. Please select another network with Metamask.') // TODO: change this?
-    return null
-  }
-} 
-*/
-
 // GET 
+
+// royalty percent
+
+export const getRoyaltyPercent = async (token, account, dispatch) => {
+  const royaltyPercent = await token.methods.royaltyPercent().call()
+  console.log('AML royaltyPercent: ', royaltyPercent)
+  dispatch(royaltyPercentLoaded(royaltyPercent))
+}
 
 // get token uri
 
@@ -126,9 +138,6 @@ export const loadTokenTransferSingles = async (token, dispatch) => {
   console.log('transferSingles stream: ', transferSinglesStream)
   const transferSingles = transferSinglesStream.map((event) => event.returnValues)
   dispatch(transferSinglesLoaded(transferSingles))
-
-  console.log('AML all NFTs', transferSingles.filter((t) => t.from === '0x0000000000000000000000000000000000000000'))
-
   dispatch(allNFTsLoaded(transferSingles.filter((t) => t.from === '0x0000000000000000000000000000000000000000')))
 }
 
@@ -151,33 +160,99 @@ export const loadCancelled = async (exchange, dispatch) => {
 // load sales
 export const loadSales = async (exchange, dispatch) => {
   const salesStream = await exchange.getPastEvents('Sale', { fromBlock: 0, toBlock: 'latest' })
-  console.log('sale stream: ', salesStream)
+  console.log('sales stream: ', salesStream)
   const sales = salesStream.map((event) => event.returnValues)
   dispatch(salesLoaded(sales))
 }
-/*
+
+// load payee added
+export const loadPayeesAdded = async (royaltyPayments, dispatch) => {
+  const payeesAddedStream = await royaltyPayments.getPastEvents('PayeeAdded', { fromBlock: 0, toBlock: 'latest' })
+  console.log('payees stream: ', payeesAddedStream)
+  const payees = payeesAddedStream.map((event) => event.returnValues)
+  dispatch(payeesAdded(payees))
+}
+
+// load payments released
+export const loadPaymentsReleased = async (royaltyPayments, dispatch) => {
+  const paymentsReleasedStream = await royaltyPayments.getPastEvents('PaymentReleased', { fromBlock: 0, toBlock: 'latest' })
+  console.log('paymentsReleased stream: ', paymentsReleasedStream)
+  const released = paymentsReleasedStream.map((event) => event.returnValues)
+  dispatch(paymentReleased(released))
+}
+
+// load payments received
+export const loadPaymentsReceived = async (royaltyPayments, dispatch) => {
+  const paymentsReceivedStream = await royaltyPayments.getPastEvents('PaymentReceived', { fromBlock: 0, toBlock: 'latest' })
+  console.log('paymentsReceivedStream stream: ', paymentsReceivedStream)
+  const received = paymentsReceivedStream.map((event) => event.returnValues)
+  dispatch(paymentReceived(received))
+}
+
 // TODO: load BATCH TRANSFER from ERC1155
 
 // subscribe - listings, cancelled, sales, token contract owner change, TransferSingle from ERC1155
-export const subscribeToEvents = async (token, exchange, dispatch) => {
+export const subscribeToEvents = async (token, exchange, royaltyPayments, dispatch) => {
+  /*
   token.events.OwnershipTransferred({}, (error, event) => {
     dispatch(ownershipChanged(event.returnValues))
   })
+*/
 
   token.events.TransferSingle({}, (error, event) => {
     dispatch(tokenTransferredSingle(event.returnValues))
   })
 
-  token.events.NewListing({}, (error, event) => {
+/*
+  exchange.events.NewListing({}, (error, event) => {
     dispatch(listingCreated(event.returnValues))
   })
+  */
 
-  token.events.Cancelled({}, (error, event) => {
+  exchange.events.Cancelled({}, (error, event) => {
     dispatch(listingCancelled(event.returnValues))
   })
 
-  token.events.Sale({}, (error, event) => {
+  exchange.events.Sale({}, (error, event) => {
     dispatch(listingPurchased(event.returnValues))
   })
+
+  /*
+  // TODO: check this
+  royaltyPayments.events.paymentReleased({}, (error, event) => {
+    dispatch(paymentReleased(event.returnValues))
+  })
+
+  royaltyPayments.events.paymentReceived({}, (error, event) => {
+    dispatch(paymentReceived(event.returnValues))
+  })
+  */
 }
-*/
+
+// Cancel listing
+
+export const cancelListing = async (dispatch, account, exchange, listing) => {
+  await exchange.methods.cancelListing(listing.listingId).send({ from: account })
+  .on('transactionHash', (hash) => {
+    dispatch(listingCancelling())
+  })
+  .on('error', (error) => {
+    console.log(error)
+    window.alert('There was an error!')
+  })
+}
+
+// Purchase listing
+
+export const purchaseListing = async (dispatch, account, exchange, listing) => {
+  const totalCost = listing.totalCost
+
+  await exchange.methods.purchaseListing(listing.listingId).send({ from: account, value: totalCost })
+  .on('transactionHash', (hash) => {
+    dispatch(listingPurchasing())
+  })
+  .on('error', (error) => {
+    console.log(error)
+    window.alert('There was an error!')
+  })
+}

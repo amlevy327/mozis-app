@@ -12,21 +12,37 @@ function web3(state = {}, action) {
   }
 }
 
+// ROYALTY PAYMENTS
+function royaltyPayments(state = {}, action) {
+  switch(action.type) {
+    case 'ROYALTY_PAYMENTS_CONTRACT_LOADED':
+      return { ...state, loaded: true, contract: action.contract}
+    case 'PAYEES_ADDED_LOADED':
+      return { ...state, loaded: true, payees: action.payees}
+    case 'PAYMENT_RELEASED_LOADED':
+      return { ...state, loaded: true, released: action.released}
+    case 'PAYMENT_RECEIVED_LOADED':
+      return { ...state, loaded: true, received: action.received}
+    default:
+      return state
+  }
+}
+
 // TOKEN
 function token(state = {}, action) {
   switch(action.type) {
     case 'TOKEN_CONTRACT_LOADED':
       return { ...state, loaded: true, contract: action.contract }
+    case 'ROYALTY_PERCENT_LOADED':
+      return { ...state, royaltyPercent: action.royaltyPercent}
     case 'TOKEN_CONTRACT_OWNER_LOADED':
       return { ...state, contractOwner: { loaded: true, address: action.contractOwner} }
     case 'TRANSFER_SINGLES_LOADED':
       return { ...state, transferSingles: { loaded: true, data: action.transferSingles } }
     case 'ALL_NFTS_LOADED':
       return { ...state, allNFTs: { loaded: true, data: action.allNFTs } }
-      /*
     case 'TOKEN_TRANSERRED_SINGLE':
       return { ...state, transferSingle: { loaded: true, data: action.transferSingles } }
-      */
       /*
     case 'TOKEN_CONTRACT_OWNER_LOADED':
       return { ...state, owner: action.owner}
@@ -64,8 +80,7 @@ function exchange(state = {}, action) {
 
     case 'CANCELLED_LOADED':
       return { ...state, allCancelled: { loaded: true, data: action.cancelled } }
-    /*
-      case 'LISTING_CANCELLING':
+    case 'LISTING_CANCELLING':
       return { ...state, listingCancelling: true }
     case 'LISTING_CANCELLED':
       return {
@@ -79,12 +94,10 @@ function exchange(state = {}, action) {
           ]
         }
       }
-    */
    
     case 'SALES_LOADED':
       return { ...state, allSales: { loaded: true, data: action.sales } }
-    /*
-      case 'LISTING_PURCHASING':
+    case 'LISTING_PURCHASING':
         return { ...state, listingPurchasing: true }
     case 'LISTING_PURCHASED':
       return {
@@ -98,7 +111,6 @@ function exchange(state = {}, action) {
           ]
         }
       }
-    */
     default:
       return state
     
@@ -110,6 +122,7 @@ function exchange(state = {}, action) {
 const rootReducer = combineReducers({
   web3,
   token,
+  royaltyPayments,
   exchange
 })
 
