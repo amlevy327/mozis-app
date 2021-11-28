@@ -15,7 +15,7 @@ module.exports = async function(deployer) {
   const payees = [artist, mozisRoyaltyPayments]
   const shares = [90, 10]
 
-  await deployer.deploy(RoyaltyPayments,
+  const royaltyPayments = await deployer.deploy(RoyaltyPayments,
     payees,
     shares,
     { from: mozisDeployer }
@@ -24,7 +24,7 @@ module.exports = async function(deployer) {
   await deployer.deploy(Token,
     artist,
     URI_STRING,
-    mozisRoyaltyPayments, // change this to royaltyPayments.address
+    royaltyPayments.address, // change this to royaltyPayments.address
     ROYALTY_PERCENT,
     { from: mozisDeployer }
   )

@@ -9,6 +9,7 @@ import {
 } from '../store/selectors'
 import Spinner from './Spinner'
 import AllNFTs from './AllNFTs'
+import RoyaltyStatus from './RoyaltyStatus'
 
 class ContentBrandOwner extends Component {
   componentWillMount() {
@@ -24,6 +25,7 @@ class ContentBrandOwner extends Component {
     return (
       <div>
         <div className="content">
+          { this.props.showAllNFTsComponent ? <RoyaltyStatus /> : <Spinner type="table"/> }
           { this.props.showAllNFTsComponent ? <AllNFTs /> : <Spinner type="table"/> }
         </div>
       </div>

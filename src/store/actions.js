@@ -108,6 +108,26 @@ export function paymentReleased(released) {
   }
 }
 
+export function paymentReceivedNewEvent(received) {
+  return {
+    type: 'PAYMENT_RECEIVED_NEW_EVENT_LOADED',
+    received
+  }
+}
+
+export function paymentReleasedNewEvent(released) {
+  return {
+    type: 'PAYMENT_RELEASED_NEW_EVENT_LOADED',
+    released
+  }
+}
+
+export function royaltyWithdrawing() {
+  return {
+    type: 'ROYALTY_WITHDRAWING'
+  }
+}
+
 // EXCHANGE
 
 // contract
