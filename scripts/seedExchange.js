@@ -66,23 +66,26 @@ module.exports = async function(callback) {
     await wait(1)
     console.log('listing 1 created- tokenId: 0, value: 1, price: 1eth')
 
-    await exchange.createListing(token.address, 1, 1, web3.utils.toWei('2', 'ether'), { from: artist })
-    await wait(1)
-    console.log('listing 2 created- tokenId: 1, value: 1, price: 2eth')
+    // await exchange.createListing(token.address, 1, 1, web3.utils.toWei('2', 'ether'), { from: artist })
+    // await wait(1)
+    // console.log('listing 2 created- tokenId: 1, value: 1, price: 2eth')
 
-    await exchange.createListing(token.address, 2, 1, web3.utils.toWei('3', 'ether'), { from: artist })
-    await wait(1)
-    console.log('listing 3 created- tokenId: 2, value: 1, price: 3eth')
+    // await exchange.createListing(token.address, 2, 1, web3.utils.toWei('3', 'ether'), { from: artist })
+    // await wait(1)
+    // console.log('listing 3 created- tokenId: 2, value: 1, price: 3eth')
 
     // cancel listing
     // await exchange.cancelListing(1, { from: artist })
     // console.log('listing 1 cancelled')
 
+    /*
     // purchase listing
     await exchange.purchaseListing(1, { from: buyer, value: web3.utils.toWei('1.1', 'ether') })
     await wait(1)
     console.log('listing 1 purchased by buyer- tokenId: 1, value: 1, price: 1eth, totalCost: 1.1eth')
+    */
 
+    /*
     // release payment to arist
     await royaltyPayments.release(artist, { from: tester })
     await wait(1)
@@ -91,6 +94,7 @@ module.exports = async function(callback) {
     await exchange.purchaseListing(2, { from: buyer, value: web3.utils.toWei('2.2', 'ether') })
     await wait(1)
     console.log('listing 2 purchased by buyer- tokenId: 2, value: 1, price: 2eth, totalCost: 2.2eth')
+    */
 
   } catch (error) {
     console.log(error)

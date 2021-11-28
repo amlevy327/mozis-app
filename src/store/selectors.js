@@ -80,7 +80,7 @@ const totalShares = state => get(state, 'royaltyPayments.totalShares.amount')
 export const totalSharesSelector = createSelector(totalShares, ts => ts)
 
 const totalSharesLoaded = state => get(state, 'royaltyPayments.totalShares.loaded', false)
-export const totalSharesLoadedSelector = createSelector(royaltyPaymentsLoaded, tsl => tsl)
+export const totalSharesLoadedSelector = createSelector(totalSharesLoaded, tsl => tsl)
 
 const royaltyPaymentsReceivedLoaded = state => get(state, 'royaltyPayments.received.loaded', false)
 export const royaltyPaymentsReceivedLoadedSelector = createSelector(royaltyPaymentsReceivedLoaded, l => l)
@@ -298,3 +298,14 @@ const addCurrentValue = (allSales, nft, account, allNFTs) => {
     currentValue
   })
 }
+
+// TODO: move
+
+const newListingTokenId = state => get(state, 'exchange.newListingTokenId')
+export const newListingTokenIdSelector = createSelector(newListingTokenId, tid => tid)
+
+const newListingValue = state => get(state, 'exchange.newListingValue')
+export const newListingValueSelector = createSelector(newListingValue, v => v)
+
+const newListingPrice = state => get(state, 'exchange.newListingPrice')
+export const newListingPriceSelector = createSelector(newListingPrice, p => p)
