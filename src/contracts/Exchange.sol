@@ -70,7 +70,7 @@ contract Exchange is Ownable {
       require(msg.value == (listing.price + royaltyAmount));
 
       payable(listing.seller).transfer(listing.price);
-      payable(receiver).transfer(royaltyAmount);
+      payable(receiver).transfer(royaltyAmount);  // TODO: CHECK THIS LINE - is receiver set right?
       
       Token(listing.tokenAddress).safeTransferFrom(listing.seller, msg.sender, listing.tokenId, listing.value, '0x0');
 

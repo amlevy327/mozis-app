@@ -18,11 +18,43 @@ function royaltyPayments(state = {}, action) {
     case 'ROYALTY_PAYMENTS_CONTRACT_LOADED':
       return { ...state, loaded: true, contract: action.contract}
     case 'PAYEES_ADDED_LOADED':
-      return { ...state, loaded: true, payees: action.payees}
-    case 'PAYMENT_RELEASED_LOADED':
-      return { ...state, loaded: true, released: action.released}
+      return { ...state, payees: { loaded: true, data: action.payees }}
     case 'PAYMENT_RECEIVED_LOADED':
-      return { ...state, loaded: true, received: action.received}
+      return { ...state, received: { loaded: true, data: action.received }}
+    case 'PAYMENT_RELEASED_LOADED':
+      return { ...state, released: { loaded: true, data: action.released}}
+    case 'PAYMENT_RECEIVED_NEW_EVENT_LOADED':
+      return {
+        ...state,
+        received: {
+          loaded: true,
+          data: [
+            ...state.received.data,
+            action.received
+          ]
+        }
+      }
+    case 'PAYMENT_RELEASED_NEW_EVENT_LOADED':
+      return {
+        ...state,
+        released: {
+          loaded: true,
+          data: [
+            ...state.released.data,
+            action.released
+          ]
+        }
+      }
+    case 'ROYALTY_WITHDRAWING':
+      return {
+        ...state,
+        released: {
+          loaded: false,
+          data: [
+            ...state.released.data,
+          ]
+        }
+      }
     default:
       return state
   }

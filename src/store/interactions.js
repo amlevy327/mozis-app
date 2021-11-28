@@ -21,7 +21,10 @@ import {
   tokenTransferredSingle,
   payeesAdded,
   paymentReleased,
-  paymentReceived
+  paymentReceived,
+  royaltyWithdrawing,
+  paymentReceivedNewEvent,
+  paymentReleasedNewEvent
   /*
   ownershipChanged,
   listingCreated,
@@ -173,20 +176,20 @@ export const loadPayeesAdded = async (royaltyPayments, dispatch) => {
   dispatch(payeesAdded(payees))
 }
 
-// load payments released
-export const loadPaymentsReleased = async (royaltyPayments, dispatch) => {
-  const paymentsReleasedStream = await royaltyPayments.getPastEvents('PaymentReleased', { fromBlock: 0, toBlock: 'latest' })
-  console.log('paymentsReleased stream: ', paymentsReleasedStream)
-  const released = paymentsReleasedStream.map((event) => event.returnValues)
-  dispatch(paymentReleased(released))
-}
-
 // load payments received
 export const loadPaymentsReceived = async (royaltyPayments, dispatch) => {
   const paymentsReceivedStream = await royaltyPayments.getPastEvents('PaymentReceived', { fromBlock: 0, toBlock: 'latest' })
   console.log('paymentsReceivedStream stream: ', paymentsReceivedStream)
   const received = paymentsReceivedStream.map((event) => event.returnValues)
   dispatch(paymentReceived(received))
+}
+
+// load payments released
+export const loadPaymentsReleased = async (royaltyPayments, dispatch) => {
+  const paymentsReleasedStream = await royaltyPayments.getPastEvents('PaymentReleased', { fromBlock: 0, toBlock: 'latest' })
+  console.log('paymentsReleased stream: ', paymentsReleasedStream)
+  const released = paymentsReleasedStream.map((event) => event.returnValues)
+  dispatch(paymentReleased(released))
 }
 
 // TODO: load BATCH TRANSFER from ERC1155
@@ -209,6 +212,7 @@ export const subscribeToEvents = async (token, exchange, royaltyPayments, dispat
   })
   */
 
+  // TODO: change action on this
   exchange.events.Cancelled({}, (error, event) => {
     dispatch(listingCancelled(event.returnValues))
   })
@@ -217,16 +221,14 @@ export const subscribeToEvents = async (token, exchange, royaltyPayments, dispat
     dispatch(listingPurchased(event.returnValues))
   })
 
-  /*
   // TODO: check this
-  royaltyPayments.events.paymentReleased({}, (error, event) => {
-    dispatch(paymentReleased(event.returnValues))
+  royaltyPayments.events.PaymentReceived({}, (error, event) => {
+    dispatch(paymentReceivedNewEvent(event.returnValues))
   })
 
-  royaltyPayments.events.paymentReceived({}, (error, event) => {
-    dispatch(paymentReceived(event.returnValues))
+  royaltyPayments.events.PaymentReleased({}, (error, event) => {
+    dispatch(paymentReleasedNewEvent(event.returnValues))
   })
-  */
 }
 
 // Cancel listing
@@ -250,6 +252,21 @@ export const purchaseListing = async (dispatch, account, exchange, listing) => {
   await exchange.methods.purchaseListing(listing.listingId).send({ from: account, value: totalCost })
   .on('transactionHash', (hash) => {
     dispatch(listingPurchasing())
+  })
+  .on('error', (error) => {
+    console.log(error)
+    window.alert('There was an error!')
+  })
+}
+
+// Withdraw royalties
+
+export const withdrawRoyalties = async (dispatch, account, royaltyPayments) => {
+
+  await royaltyPayments.methods.release(account).send({ from: account })
+  .on('transactionHash', (hash) => {
+    dispatch(royaltyWithdrawing())
+    console.log('AML withdrawRoyalties')
   })
   .on('error', (error) => {
     console.log(error)

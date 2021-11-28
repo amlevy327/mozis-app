@@ -9,7 +9,8 @@ import {
   allOpenListingsSelector,
   accountSelector,
   exchangeSelector,
-  myNFTsSelector
+  myNFTsSelector,
+  tokenContractOwnerSelector
 } from '../store/selectors'
 // import {
 // } from '../store/selectors'
@@ -119,6 +120,8 @@ const showMyNFTs = (props) => {
               <td>{nft.numberForSale}</td>
             </tr>
           )
+        } else {
+          return
         }
       })
       }
@@ -126,12 +129,25 @@ const showMyNFTs = (props) => {
   )
 }
 
+const showUserType = (props) => {
+  const {
+    account,
+    owner
+  } = props
+
+  if (account === owner) {
+    return "Brand Owner"
+  } else {
+    return "Customer"
+  }
+}
+
 class AllNFTs extends Component {
   render() {
     return (
       <div className="card bg-dark text-white">
         <div className="card-header">
-            Mozis
+          { showUserType(this.props) }
         </div>
         <div className="card-body">
           <Tabs defaultActiveKey="collection" className="bg-dark text-white">
@@ -194,7 +210,8 @@ function mapStateToProps(state) {
     allOpenListings: allOpenListingsSelector(state),
     account: accountSelector(state),
     exchange: exchangeSelector(state),
-    myNFTs: myNFTsSelector(state)
+    myNFTs: myNFTsSelector(state),
+    owner: tokenContractOwnerSelector(state)
   }
 }
 

@@ -68,6 +68,25 @@ const addCurrentValue = (allTransferSingles, nft, account) => {
 }
 */
 
+// ROYALTY PAYMENTS
+
+const royaltyPayments = state => get(state, 'royaltyPayments.contract')
+export const royaltyPaymentsSelector = createSelector(royaltyPayments, rp => rp)
+
+const royaltyPaymentsLoaded = state => get(state, 'royaltyPayments.loaded', false)
+export const royaltyPaymentsLoadedSelector = createSelector(royaltyPaymentsLoaded, rpl => rpl)
+
+const royaltyPaymentsReceivedLoaded = state => get(state, 'royaltyPayments.received.loaded', false)
+export const royaltyPaymentsReceivedLoadedSelector = createSelector(royaltyPaymentsReceivedLoaded, l => l)
+
+const royaltyPaymentsReceived = state => get(state, 'royaltyPayments.received.data', [])
+export const royaltyPaymentsReceivedSelector = createSelector(royaltyPaymentsReceived, rpr => rpr)
+
+const royaltyPaymentsReleasedLoaded = state => get(state, 'royaltyPayments.released.loaded', false)
+export const royaltyPaymentsReleasedLoadedSelector = createSelector(royaltyPaymentsReleasedLoaded, l => l)
+
+const royaltyPaymentsReleased = state => get(state, 'royaltyPayments.released.data', [])
+export const royaltyPaymentsReleasedSelector = createSelector(royaltyPaymentsReleased, rpr => rpr)
 
 // EXCHANGE
 
@@ -102,6 +121,11 @@ export const listingPurchasingSelector = createSelector(listingPurchasing, statu
 const allListings = state => get(state, 'exchange.allListings.data', [])
 const allCancelled = state => get(state, 'exchange.allCancelled.data', [])
 const allSales = state => get(state, 'exchange.allSales.data', [])
+
+export const allOwnerSalesSelector = createSelector(allSales, account, (allSales, account) => {
+  const allOwnerSales = allSales.filter((s) => s.from === account)
+  return allOwnerSales
+})
 
 export const allOpenListingsSelector = createSelector(allListings, allCancelled, allSales, account, royaltyPercent, (listings, cancelled, sales, account, royaltyPercent) => {
   let allOpenListings = reject(listings, (listing) => {

@@ -15,6 +15,7 @@ import {
   subscribeToEvents,
   getRoyaltyPercent,
   loadPayeesAdded,
+  loadPaymentsReceived,
   loadPaymentsReleased
 } from '../store/interactions'
 import {
@@ -94,6 +95,7 @@ class App extends Component {
     await subscribeToEvents(token, exchange, royaltyPayments, dispatch)
     await getRoyaltyPercent(token, account, dispatch)
     await loadPayeesAdded(royaltyPayments, dispatch)
+    await loadPaymentsReceived(royaltyPayments, dispatch)
     await loadPaymentsReleased(royaltyPayments, dispatch)
   }
 
