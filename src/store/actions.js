@@ -210,3 +210,39 @@ export function listingPurchased(sale) {
     sale
   }
 }
+
+export function listingCreating() {
+  return {
+    type: 'LISTING_CREATING'
+  }
+}
+
+export function listingCreated(listing) {
+  return {
+    type: 'LISTING_CREATED',
+    listing
+  }
+}
+
+// create listing
+
+export function newListingTokenIdChanged(tokenId) {
+  return {
+    type: 'NEW_LISTING_TOKEN_ID_CHANGED',
+    tokenId
+  }
+}
+
+export function newListingValueChanged(value) {
+  return {
+    type: 'NEW_LISTING_VALUE_CHANGED',
+    value
+  }
+}
+
+export function newListingPriceChanged(price) {
+  return {
+    type: 'NEW_LISTING_PRICE_CHANGED',
+    price
+  }
+}

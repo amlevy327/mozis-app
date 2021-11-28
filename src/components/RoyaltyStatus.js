@@ -61,7 +61,7 @@ const showFinancials = (props) => {
         </tr>
         <tr>
           <td>TOTAL REVENUE</td>
-          <td>{calculateTotalAvailableToWithdraw(royaltyPaymentsReceived, royaltyPaymentsReleased, totalShares, payeeShares) + calculateTotalReleased(royaltyPaymentsReleased) + calculateDirectSales(allOwnerSales)}</td>
+          <td>{((calculateTotalAvailableToWithdraw(royaltyPaymentsReceived, royaltyPaymentsReleased, totalShares, payeeShares) + calculateTotalReleased(royaltyPaymentsReleased) + calculateDirectSales(allOwnerSales)) > 0) ? calculateTotalAvailableToWithdraw(royaltyPaymentsReceived, royaltyPaymentsReleased, totalShares, payeeShares) + calculateTotalReleased(royaltyPaymentsReleased) + calculateDirectSales(allOwnerSales) : "0"}</td>
         </tr>
       </tbody>
     </table>

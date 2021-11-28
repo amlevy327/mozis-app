@@ -95,8 +95,7 @@ function exchange(state = {}, action) {
     
     case 'LISTINGS_LOADED':
       return { ...state, allListings: { loaded: true, data: action.listings } }
-    /*
-      case 'LISTING_CREATING':
+    case 'LISTING_CREATING':
       return { ...state, listingCreating: true }
     case 'LISTING_CREATED':
       return {
@@ -110,7 +109,6 @@ function exchange(state = {}, action) {
           ]
         }
       }
-    */
 
     case 'CANCELLED_LOADED':
       return { ...state, allCancelled: { loaded: true, data: action.cancelled } }
@@ -145,13 +143,18 @@ function exchange(state = {}, action) {
           ]
         }
       }
+    
+    case 'NEW_LISTING_TOKEN_ID_CHANGED':
+      return { ...state, newListingTokenId: action.tokenId }
+    case 'NEW_LISTING_VALUE_CHANGED':
+      return { ...state, newListingValue: action.value }
+    case 'NEW_LISTING_PRICE_CHANGED':
+      return { ...state, newListingPrice: action.price }
+    
     default:
       return state
-    
   }
 }
-
-// TODO: add contract reducer
 
 const rootReducer = combineReducers({
   web3,

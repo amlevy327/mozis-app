@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import './App.css'
-// import {
-// } from '../store/interactions'
 import {
   allTransferSinglesLoadedSelector,
   allListingTypesLoadedSelector
@@ -10,6 +8,7 @@ import {
 import Spinner from './Spinner'
 import AllNFTs from './AllNFTs'
 import RoyaltyStatus from './RoyaltyStatus'
+import CreateListing from './CreateListing'
 
 class ContentBrandOwner extends Component {
   componentWillMount() {
@@ -25,7 +24,10 @@ class ContentBrandOwner extends Component {
     return (
       <div>
         <div className="content">
-          { this.props.showAllNFTsComponent ? <RoyaltyStatus /> : <Spinner type="table"/> }
+          <div className="vertical-split">
+            { this.props.showAllNFTsComponent ? <RoyaltyStatus /> : <Spinner type="table"/> }
+            { this.props.showAllNFTsComponent ? <CreateListing /> : <Spinner type="table"/> }
+          </div>
           { this.props.showAllNFTsComponent ? <AllNFTs /> : <Spinner type="table"/> }
         </div>
       </div>

@@ -4,7 +4,6 @@ import {
   web3Loaded,
   web3AccountLoaded,
   tokenContractLoaded,
-  //tokenContractOwnerLoaded,
   exchangeContractLoaded,
   royaltyPaymentsContractLoaded,
   tokenContractOwnerLoaded,
@@ -25,10 +24,11 @@ import {
   royaltyWithdrawing,
   paymentReceivedNewEvent,
   paymentReleasedNewEvent,
-  totalSharesLoaded
+  totalSharesLoaded,
+  listingCreating,
+  listingCreated
   /*
   ownershipChanged,
-  listingCreated,
   */
 } from './actions.js'
 import Token from '../abis/Token.json'
@@ -127,6 +127,17 @@ export const getTotalShares = async (royaltyPayments, dispatch) => {
 
 // create listing
 
+export const createListing = async (account, exchange, tokenAddress, tokenId, value, price, dispatch) => {
+  await exchange.methods.createListing(tokenAddress, tokenId, value, price).send({ from: account })
+  .on('transactionHash', (hash) => {
+    dispatch(listingCreating())
+  })
+  .on('error', (error) => {
+    console.log(error)
+    window.alert('There was an error!')
+  })
+}
+
 // cancel listing
 
 // purchase listing
@@ -213,11 +224,9 @@ export const subscribeToEvents = async (token, exchange, royaltyPayments, dispat
     dispatch(tokenTransferredSingle(event.returnValues))
   })
 
-/*
   exchange.events.NewListing({}, (error, event) => {
     dispatch(listingCreated(event.returnValues))
   })
-  */
 
   // TODO: change action on this
   exchange.events.Cancelled({}, (error, event) => {
