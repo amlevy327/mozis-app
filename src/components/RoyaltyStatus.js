@@ -11,7 +11,11 @@ import {
   royaltyPaymentsReleasedLoadedSelector,
   royaltyPaymentsReleasedSelector,
   royaltyPaymentsSelector,
-  royaltyPaymentsLoadedSelector
+  royaltyPaymentsLoadedSelector,
+  totalSharesLoadedSelector,
+  totalSharesSelector,
+  payeeSharesSelector,
+  allPayeesLoadedSelector
 } from '../store/selectors'
 import {
   withdrawRoyalties
@@ -29,6 +33,8 @@ const showFinancials = (props) => {
     allOwnerSales,
     account,
     royaltyPayments,
+    totalShares,
+    payeeShares,
     dispatch
   } = props
 
@@ -37,7 +43,7 @@ const showFinancials = (props) => {
       <tbody>
         <tr>
           <td>Royalties to Withdraw</td>
-          <td>{calculateTotalAvailableToWithdraw(royaltyPaymentsReceived, royaltyPaymentsReleased)}</td>
+          <td>{calculateTotalAvailableToWithdraw(royaltyPaymentsReceived, royaltyPaymentsReleased, totalShares, payeeShares)}</td>
           <td
                 className="text-muted cancel-order"
                 onClick={(e) => {
@@ -55,14 +61,14 @@ const showFinancials = (props) => {
         </tr>
         <tr>
           <td>TOTAL REVENUE</td>
-          <td>{calculateTotalAvailableToWithdraw(royaltyPaymentsReceived, royaltyPaymentsReleased) + calculateTotalReleased(royaltyPaymentsReleased) + calculateDirectSales(allOwnerSales)}</td>
+          <td>{calculateTotalAvailableToWithdraw(royaltyPaymentsReceived, royaltyPaymentsReleased, totalShares, payeeShares) + calculateTotalReleased(royaltyPaymentsReleased) + calculateDirectSales(allOwnerSales)}</td>
         </tr>
       </tbody>
     </table>
   )
 }
 
-const calculateTotalAvailableToWithdraw = (royaltyPaymentsReceived, royaltyPaymentsReleased) => {
+const calculateTotalAvailableToWithdraw = (royaltyPaymentsReceived, royaltyPaymentsReleased, totalShares, payeeShares) => {
   let totalAvailable = 0
 
   for(let i=0;i<royaltyPaymentsReceived.length;i++){
@@ -71,7 +77,7 @@ const calculateTotalAvailableToWithdraw = (royaltyPaymentsReceived, royaltyPayme
     }
   }
 
-  totalAvailable = totalAvailable * 90 / 100
+  totalAvailable = totalAvailable * parseInt(payeeShares) / parseInt(totalShares)
 
   for(let i=0;i<royaltyPaymentsReleased.length;i++){
     if (royaltyPaymentsReleased[i]){
@@ -99,16 +105,12 @@ const calculateTotalReleased = (royaltyPaymentsReleased) => {
 
 const calculateDirectSales = (allOwnerSales) => {
   let totalDirectSales = 0
-
-  console.log('AML allOwnerSales: ', allOwnerSales)
-
+  
   for(let i=0;i<allOwnerSales.length;i++){
     if (allOwnerSales[i]){
       totalDirectSales += parseInt(allOwnerSales[i].price)
     }
   }
-
-  console.log('AML totalDirectSales: ', totalDirectSales)
 
   return ether(totalDirectSales)
 }
@@ -134,14 +136,18 @@ function mapStateToProps(state) {
   const royaltyPaymentsReleasedLoaded = royaltyPaymentsReleasedLoadedSelector(state)
   const allSalesLoaded = allSalesLoadedSelector(state)
   const royaltyPaymentsLoaded = royaltyPaymentsLoadedSelector(state)
+  const totalSharesLoaded = totalSharesLoadedSelector(state)
+  const allPayeesLoaded = allPayeesLoadedSelector(state)
 
   return {
-    showAll: royaltyPaymentsReceivedLoaded && royaltyPaymentsReleasedLoaded && allSalesLoaded && royaltyPaymentsLoaded,
+    showAll: royaltyPaymentsReceivedLoaded && royaltyPaymentsReleasedLoaded && allSalesLoaded && royaltyPaymentsLoaded && totalSharesLoaded && allPayeesLoaded,
     royaltyPaymentsReceived: royaltyPaymentsReceivedSelector(state),
     royaltyPaymentsReleased: royaltyPaymentsReleasedSelector(state),
     account: accountSelector(state),
     allOwnerSales: allOwnerSalesSelector(state),
     royaltyPayments: royaltyPaymentsSelector(state),
+    totalShares: totalSharesSelector(state),
+    payeeShares: payeeSharesSelector(state)
   }
 }
 

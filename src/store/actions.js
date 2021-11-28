@@ -87,6 +87,13 @@ export function royaltyPercentLoaded(royaltyPercent) {
   }
 }
 
+export function totalSharesLoaded(totalShares) {
+  return {
+    type: 'TOTAL_SHARES_LOADED',
+    totalShares
+  }
+}
+
 export function payeesAdded(payees) {
   return {
     type: 'PAYEES_ADDED_LOADED',

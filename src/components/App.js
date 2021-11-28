@@ -16,7 +16,8 @@ import {
   getRoyaltyPercent,
   loadPayeesAdded,
   loadPaymentsReceived,
-  loadPaymentsReleased
+  loadPaymentsReleased,
+  getTotalShares
 } from '../store/interactions'
 import {
   accountSelector,
@@ -97,6 +98,7 @@ class App extends Component {
     await loadPayeesAdded(royaltyPayments, dispatch)
     await loadPaymentsReceived(royaltyPayments, dispatch)
     await loadPaymentsReleased(royaltyPayments, dispatch)
+    await getTotalShares(royaltyPayments, dispatch)
   }
 
   render() {

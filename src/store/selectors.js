@@ -76,6 +76,12 @@ export const royaltyPaymentsSelector = createSelector(royaltyPayments, rp => rp)
 const royaltyPaymentsLoaded = state => get(state, 'royaltyPayments.loaded', false)
 export const royaltyPaymentsLoadedSelector = createSelector(royaltyPaymentsLoaded, rpl => rpl)
 
+const totalShares = state => get(state, 'royaltyPayments.totalShares.amount')
+export const totalSharesSelector = createSelector(totalShares, ts => ts)
+
+const totalSharesLoaded = state => get(state, 'royaltyPayments.totalShares.loaded', false)
+export const totalSharesLoadedSelector = createSelector(royaltyPaymentsLoaded, tsl => tsl)
+
 const royaltyPaymentsReceivedLoaded = state => get(state, 'royaltyPayments.received.loaded', false)
 export const royaltyPaymentsReceivedLoadedSelector = createSelector(royaltyPaymentsReceivedLoaded, l => l)
 
@@ -87,6 +93,22 @@ export const royaltyPaymentsReleasedLoadedSelector = createSelector(royaltyPayme
 
 const royaltyPaymentsReleased = state => get(state, 'royaltyPayments.released.data', [])
 export const royaltyPaymentsReleasedSelector = createSelector(royaltyPaymentsReleased, rpr => rpr)
+
+const allPayeesLoaded = state => get(state, 'royaltyPayments.payees.loaded', false)
+export const allPayeesLoadedSelector = createSelector(allPayeesLoaded, l => l)
+
+const allPayees = state => get(state, 'royaltyPayments.payees.data', [])
+export const payeeSharesSelector = createSelector(allPayees, account, (allPayees, account) => {
+  let payeeShares
+  
+  for(let i=0;i<allPayees.length;i++){
+    if(account === allPayees[i].account) {
+      payeeShares = allPayees[i].shares
+    }
+  }
+  
+  return payeeShares
+})
 
 // EXCHANGE
 
@@ -134,11 +156,7 @@ export const allOpenListingsSelector = createSelector(allListings, allCancelled,
     return (listingCancelled || listingSold)
   })
 
-  console.log('AML allOpenListings: ', allOpenListings)
-
   allOpenListings = decorateOpenListings(allOpenListings, account, royaltyPercent)
-
-  console.log('AML allOpenListings decorated: ', allOpenListings)
 
   return allOpenListings
 })
@@ -193,17 +211,13 @@ const allNFTsLoaded = state => get(state, 'token.allNFTs.loaded', false)
 export const allNFTsLoadedSelector = createSelector(allNFTsLoaded, nftl => nftl)
 
 export const allNFTsSelector = createSelector(allTransferSingles, allListings, allCancelled, allSales, (allTransferSingles, listings, cancelled, sales) => {
-  console.log('AML allNFTs pre filter: ', allTransferSingles.length)
   let allNFTs = allTransferSingles.filter((t) => t.from === FRESH_MINT)
-  console.log('AML allNFTs post filter: ', allNFTs.length)
 
   let allOpenListings = reject(listings, (listing) => {
     const listingCancelled = cancelled.some((l) => l.listingId === listing.listingId)
     const listingSold = sales.some((l) => l.listingId === listing.listingId)
     return (listingCancelled || listingSold)
   })
-
-  console.log('AML allNFTs allOpenListings: ', allOpenListings.length)
 
   allNFTs = decorateAllNFTs(allNFTs, allOpenListings)
   
@@ -213,7 +227,6 @@ export const allNFTsSelector = createSelector(allTransferSingles, allListings, a
 const decorateAllNFTs = (allNFTs, allOpenListings) => {
   return(
     allNFTs.map((nft) => {
-      console.log('AML allNFTs nft.id: ', nft.id)
       nft = addNumberForSale(nft, allOpenListings)
       return nft
     })
@@ -224,8 +237,6 @@ const addNumberForSale = (nft, allOpenListings) => {
   let numberForSale = 0
 
   for(let i=0;i<allOpenListings.length;i++){
-    console.log('AML allNFTs allOpenListings[i].value: ', allOpenListings[i].value)
-    console.log('AML allNFTs allOpenListings[i].tokenId: ', allOpenListings[i].tokenId)
     if(nft.id === allOpenListings[i].tokenId) {
       numberForSale += parseInt(allOpenListings[i].value)
     }
