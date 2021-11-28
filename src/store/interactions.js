@@ -24,7 +24,8 @@ import {
   paymentReceived,
   royaltyWithdrawing,
   paymentReceivedNewEvent,
-  paymentReleasedNewEvent
+  paymentReleasedNewEvent,
+  totalSharesLoaded
   /*
   ownershipChanged,
   listingCreated,
@@ -104,8 +105,14 @@ export const loadExchangeContract = async (web3, networkId, dispatch) => {
 
 export const getRoyaltyPercent = async (token, account, dispatch) => {
   const royaltyPercent = await token.methods.royaltyPercent().call()
-  console.log('AML royaltyPercent: ', royaltyPercent)
   dispatch(royaltyPercentLoaded(royaltyPercent))
+}
+
+// total shares
+
+export const getTotalShares = async (royaltyPayments, dispatch) => {
+  const totalShares = await royaltyPayments.methods.totalShares().call()
+  dispatch(totalSharesLoaded(totalShares))
 }
 
 // get token uri

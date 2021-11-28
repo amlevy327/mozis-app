@@ -17,6 +17,8 @@ function royaltyPayments(state = {}, action) {
   switch(action.type) {
     case 'ROYALTY_PAYMENTS_CONTRACT_LOADED':
       return { ...state, loaded: true, contract: action.contract}
+    case 'TOTAL_SHARES_LOADED':
+      return { ...state, totalShares: { loaded: true, amount: action.totalShares }}
     case 'PAYEES_ADDED_LOADED':
       return { ...state, payees: { loaded: true, data: action.payees }}
     case 'PAYMENT_RECEIVED_LOADED':
