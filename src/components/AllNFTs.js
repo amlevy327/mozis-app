@@ -10,13 +10,16 @@ import {
   accountSelector,
   exchangeSelector,
   myNFTsSelector,
-  tokenContractOwnerSelector
+  tokenContractOwnerSelector,
+  tokenSelector,
+  tokensMetadataSelector
 } from '../store/selectors'
 // import {
 // } from '../store/selectors'
 import {
   cancelListing,
-  purchaseListing
+  purchaseListing,
+  loadAllMetaData
 } from '../store/interactions'
 // import {
 // } from '../store/actions'
@@ -24,59 +27,77 @@ import { ether } from '../helpers.js'
 
 const showAllNFTs = (props) => {
   const {
-    allNFTs
+    allNFTs,
+    tokensMetadata
   } = props
 
-  return(
-    <tbody>
-      { allNFTs.map((nft) => {
-        return(
-          <tr className={`nft-${nft.id}`} key={nft.id}>
-            <td>
-              {/* <img src={art.tokenURI} alt="N/A" width="100" height="100"></img> */}
-            </td>
-            <td>{nft.id}</td>
-            <td>{nft.value}</td>
-            <td>{nft.numberForSale}</td>
-          </tr>
-        )
-      })
-      }
-    </tbody>
-  )
+  if (allNFTs.length === tokensMetadata.length) {
+    console.log("AML lengths are equal")
+    return(
+      <tbody>
+        { allNFTs.map((nft) => {
+          return(
+            <tr className={`nft-${nft.id}`} key={nft.id}>
+              <td>
+                <img src={tokensMetadata[nft.id].image} alt="N/A" width="100" height="100"></img>
+              </td>
+              <td>{tokensMetadata[nft.id].name}</td>
+              <td>{nft.id}</td>
+              <td>{nft.value}</td>
+              <td>{nft.numberForSale}</td>
+            </tr>
+          )
+        })
+        }
+      </tbody>
+    )
+  } else {
+    console.log("AML lengths are NOT equal")
+    return(<div></div>)
+  }
 }
 
 const showAllOpenListings = (props) => {
   const {
-    allOpenListings
+    allOpenListings,
+    tokensMetadata,
+    allNFTs
   } = props
 
-  return(
-    <tbody>
-      { allOpenListings.map((listing) => {
-        return(
-          <tr className={`listing-${listing.listingId}`} key={listing.listingId}>
-            <td>
-              {/* <img src={art.tokenURI} alt="N/A" width="100" height="100"></img> */}
-            </td>
-            <td>{listing.listingId}</td>
-            <td>{listing.value}</td>
-            <td>{listing.seller}</td>
-            <td>{ether(listing.price)}</td>
-            <td>{ether(listing.royaltyAmount)}</td>
-            <td>{ether(listing.totalCost)}</td>
-            <td
-                className="text-muted cancel-order"
-                onClick={(e) => {
-                  completeListingAction(props, listing)
-                }}
-            >{listing.buttonText}</td>
-          </tr>
-        )
-      })
-      }
-    </tbody>
-  )
+  if (allNFTs.length === tokensMetadata.length) {
+    console.log("AML lengths are equal")
+    return(
+      <tbody>
+        { allOpenListings.map((listing) => {
+          console.log("AML tokensMetadata: ", tokensMetadata)
+          console.log("AML listing.tokenId: ", listing.tokenId)
+          return(
+            <tr className={`listing-${listing.listingId}`} key={listing.listingId}>
+              <td>
+                <img src={tokensMetadata[listing.tokenId].image} alt="N/A" width="100" height="100"></img>
+              </td>
+              <td>{tokensMetadata[listing.tokenId].name}</td>
+              <td>{listing.listingId}</td>
+              <td>{listing.value}</td>
+              <td>{ether(listing.price)}</td>
+              <td>{ether(listing.royaltyAmount)}</td>
+              <td>{ether(listing.totalCost)}</td>
+              <td
+                  className="text-muted cancel-order"
+                  onClick={(e) => {
+                    completeListingAction(props, listing)
+                  }}
+              >{listing.buttonText}</td>
+            </tr>
+          )
+        })
+        }
+      </tbody>
+    )
+  } else {
+    console.log("AML lengths are NOT equal")
+    return(<div></div>)
+  }
 }
 
 const completeListingAction = (props, listing) => {
@@ -102,31 +123,40 @@ const completeListingAction = (props, listing) => {
 
 const showMyNFTs = (props) => {
   const {
-    myNFTs
+    myNFTs,
+    tokensMetadata,
+    allNFTs
   } = props
 
-  return(
-    <tbody>
-      { myNFTs.map((nft) => {
-        if (nft.currentValue > 0) {
-          return(
-            <tr className={`nft-${nft.id}`} key={nft.id}>
-              <td>
-                {/* <img src={art.tokenURI} alt="N/A" width="100" height="100"></img> */}
-              </td>
-              <td>{nft.id}</td>
-              <td>{nft.currentValue}</td>
-              <td>{nft.value}</td>
-              <td>{nft.numberForSale}</td>
-            </tr>
-          )
-        } else {
-          return
+  if (allNFTs.length === tokensMetadata.length) {
+    console.log("AML lengths are equal")
+    return(
+      <tbody>
+        { myNFTs.map((nft) => {
+          if (nft.currentValue > 0) {
+            return(
+              <tr className={`nft-${nft.id}`} key={nft.id}>
+                <td>
+                  <img src={tokensMetadata[nft.id].image} alt="N/A" width="100" height="100"></img>
+                </td>
+                <td>{tokensMetadata[nft.id].name}</td>
+                <td>{nft.id}</td>
+                <td>{nft.currentValue}</td>
+                <td>{nft.value}</td>
+                <td>{nft.numberForSale}</td>
+              </tr>
+            )
+          } else {
+            return
+          }
+        })
         }
-      })
-      }
-    </tbody>
-  )
+      </tbody>
+    )
+  } else {
+    console.log("AML lengths are NOT equal")
+    return(<div></div>)
+  }
 }
 
 const showUserType = (props) => {
@@ -143,7 +173,24 @@ const showUserType = (props) => {
 }
 
 class AllNFTs extends Component {
+  componentWillMount() {
+    this.loadBlockchainData(this.props)
+  }
+
+  async loadBlockchainData(props) {
+    const {
+      token,
+      dispatch,
+      allNFTs
+    } = props
+
+    await loadAllMetaData(token, allNFTs, dispatch)
+  }
+
   render() {
+    console.log('AML this.props.allNFTs.length: ', this.props.allNFTs.length)
+    console.log('AML tokensMetadata.length: ', this.props.tokensMetadata.length)
+
     return (
       <div className="card bg-dark text-white">
         <div className="card-header">
@@ -156,12 +203,13 @@ class AllNFTs extends Component {
                 <thead>
                   <tr>
                     <th>Image</th>
-                    <th>ID</th>
+                    <th>Name</th>
+                    <th>NFT ID</th>
                     <th># Minted</th>
                     <th># For Sale</th>
                   </tr>
                 </thead>
-                { this.props.allNFTsLoaded ? showAllNFTs(this.props) : <Spinner type="table"/> }
+                { this.props.showAll ? showAllNFTs(this.props) : <Spinner type="table"/> }
               </table>
             </Tab>
             <Tab eventKey="marketplace" title="Marketplace" className="bg-dark">
@@ -169,16 +217,16 @@ class AllNFTs extends Component {
                 <thead>
                   <tr>
                     <th>Image</th>
+                    <th>Name</th>
                     <th>Listing ID</th>
                     <th># For Sale</th>
-                    <th>Seller</th>
                     <th>Price (eth)</th>
                     <th>Royalty Amount (eth)</th>
                     <th>Total Cost (eth)</th>
                     <th></th>
                   </tr>
                 </thead>
-                { this.props.allListingTypesLoaded ? showAllOpenListings(this.props) : <Spinner type="table"/> }
+                { this.props.showAll ? showAllOpenListings(this.props) : <Spinner type="table"/> }
               </table>
             </Tab>
             <Tab eventKey="my" title="My NFTs" className="bg-dark">
@@ -186,13 +234,14 @@ class AllNFTs extends Component {
                 <thead>
                   <tr>
                     <th>Image</th>
-                    <th>ID</th>
+                    <th>Name</th>
+                    <th>NFT ID</th>
                     <th># Owned</th>
                     <th># Minted</th>
                     <th># For Sale</th>
                   </tr>
                 </thead>
-                { this.props.allListingTypesLoaded ? showMyNFTs(this.props) : <Spinner type="table"/> }
+                { this.props.showAll ? showMyNFTs(this.props) : <Spinner type="table"/> }
               </table>
             </Tab>
           </Tabs>
@@ -203,15 +252,21 @@ class AllNFTs extends Component {
 }
 
 function mapStateToProps(state) {
+  const allNFTsLoaded = allNFTsLoadedSelector(state)
+  const allListingTypesLoaded = allListingTypesLoadedSelector(state)
+
   return {
+    showAll: allListingTypesLoaded && allNFTsLoaded,
     allNFTsLoaded: allNFTsLoadedSelector(state),
     allNFTs: allNFTsSelector(state),
-    allListingTypesLoaded: allListingTypesLoadedSelector(state),
     allOpenListings: allOpenListingsSelector(state),
     account: accountSelector(state),
     exchange: exchangeSelector(state),
+    owner: tokenContractOwnerSelector(state),
+    token: tokenSelector(state),
     myNFTs: myNFTsSelector(state),
-    owner: tokenContractOwnerSelector(state)
+    myNFTsLength: myNFTsSelector(state),
+    tokensMetadata: tokensMetadataSelector(state)
   }
 }
 

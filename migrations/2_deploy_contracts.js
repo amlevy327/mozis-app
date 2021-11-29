@@ -2,7 +2,7 @@ const RoyaltyPayments = artifacts.require('../contracts/RoyaltyPayments.sol')
 const Token = artifacts.require('../contracts/Token.sol')
 const Exchange = artifacts.require('../contracts/Exchange.sol')
 
-let URI_STRING = "www.me.com/"
+let URI_STRING = "https://bafybeibrrqtpdtdtknfsuyzzo6n4io36twc6vdmadtqy4jcofz5xnzhxq4.ipfs.dweb.link/"
 let ROYALTY_PERCENT = "1000"
 
 module.exports = async function(deployer) {

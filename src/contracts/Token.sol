@@ -36,7 +36,7 @@ contract Token is ERC1155, Ownable, ERC2981Collection {
     function uri(uint256 _tokenId) public view virtual override returns (string memory) {
         return string(
             abi.encodePacked(
-                "www.me.com/",
+                "https://bafybeibrrqtpdtdtknfsuyzzo6n4io36twc6vdmadtqy4jcofz5xnzhxq4.ipfs.dweb.link/",
                 Strings.toString(_tokenId),
                 ".json"
                 )

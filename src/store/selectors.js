@@ -319,7 +319,6 @@ const approvalForAllLoaded = state => get(state, 'token.approvalForAll.loaded')
 export const approvalForAllLoadedSelector = createSelector(approvalForAllLoaded, l => l)
 
 const approvalForAll = state => get(state, 'token.approvalForAll.data')
-
 export const exchangeApprovalStatusSelector = createSelector(approvalForAll, account, exchange, (approvalForAll, account, exchange) => {
   let approvalStatus = false
   const approvalsByAccount = approvalForAll.filter((a) => a.account === account)
@@ -332,3 +331,9 @@ export const exchangeApprovalStatusSelector = createSelector(approvalForAll, acc
   
   return approvalStatus
 })
+
+const tokensMetadataLoaded = state => get(state, 'token.metadata.loaded', false)
+export const tokensMetadataLoadedSelector = createSelector(tokensMetadataLoaded, l => l)
+
+const tokensMetadata = state => get(state, 'token.metadata.data', [])
+export const tokensMetadataSelector = createSelector(tokensMetadata, tm => tm)

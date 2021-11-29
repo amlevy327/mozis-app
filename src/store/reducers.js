@@ -67,6 +67,20 @@ function token(state = {}, action) {
   switch(action.type) {
     case 'TOKEN_CONTRACT_LOADED':
       return { ...state, loaded: true, contract: action.contract }
+
+    case 'TOKEN_METADATA_BLANK':
+      return { ...state, metadata: { loaded: false, data: [] } }  
+    case 'TOKEN_METADATA_LOADED':
+      return {
+        ...state,
+        metadata: {
+          data: [
+            ...state.metadata.data,
+            action.tokenMetadata
+          ]
+        }
+      }
+    
     case 'ROYALTY_PERCENT_LOADED':
       return { ...state, royaltyPercent: action.royaltyPercent}
     case 'TOKEN_CONTRACT_OWNER_LOADED':

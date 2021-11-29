@@ -29,7 +29,9 @@ import {
   listingCreated,
   approvalForAllLoaded,
   approvingExchange,
-  exchangeApproved
+  exchangeApproved,
+  tokenMetadataLoaded,
+  setTokenMetadataBlank
   /*
   ownershipChanged,
   */
@@ -344,4 +346,34 @@ export const createListing = async (account, exchange, token, tokenId, value, pr
       window.alert('There was an error!')
     })
   }
+}
+
+// TODO: move
+
+export const setBlankTokenMetadata = (dispatch) => {
+  dispatch(setTokenMetadataBlank())
+}
+
+export const loadAllMetaData = async (token, allNFTs, dispatch) => {
+  console.log('AML allNFTs: ', allNFTs.lengthr)
+  dispatch(setTokenMetadataBlank())
+
+  for(let i=0;i<allNFTs.length;i++){
+    console.log('AML allNFTs i: ', allNFTs[i])
+    const tokenUri = await token.methods.uri(allNFTs[i].id).call()
+    getTokenMetadata(tokenUri, dispatch)
+  }
+}
+
+export const getTokenMetadata = async (tokenUri, dispatch) => {
+  console.log('AML tokenUri: ',  tokenUri)
+  return fetch(tokenUri)
+  .then((response) => response.json())
+  .then((responseJson) => {
+    dispatch(tokenMetadataLoaded(responseJson))
+    console.log('AML responseJson: ', responseJson)
+  })
+  .catch((error) => {
+    console.error(error);
+  });
 }
