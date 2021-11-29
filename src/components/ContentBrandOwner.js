@@ -7,7 +7,8 @@ import {
 } from '../store/selectors'
 import Spinner from './Spinner'
 import AllNFTs from './AllNFTs'
-import RoyaltyStatus from './RoyaltyStatus'
+// import Financials from './Financials'
+import DashboardBrandOwner from './DashboardBrandOwner'
 import CreateListing from './CreateListing'
 
 class ContentBrandOwner extends Component {
@@ -25,7 +26,8 @@ class ContentBrandOwner extends Component {
       <div>
         <div className="content">
           <div className="vertical-split">
-            { this.props.showAllNFTsComponent ? <RoyaltyStatus /> : <Spinner type="table"/> }
+            {/* { this.props.showAllNFTsComponent ? <Financials /> : <Spinner type="table"/> } */}
+            { this.props.showAllNFTsComponent ? <DashboardBrandOwner /> : <Spinner type="table"/> }
             { this.props.showAllNFTsComponent ? <CreateListing /> : <Spinner type="table"/> }
           </div>
           { this.props.showAllNFTsComponent ? <AllNFTs /> : <Spinner type="table"/> }

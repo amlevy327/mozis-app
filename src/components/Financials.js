@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux"
-import { Tab, Tabs } from 'react-bootstrap'
 import Spinner from './Spinner'
 import {
   accountSelector,
@@ -40,6 +39,13 @@ const showFinancials = (props) => {
 
   return(
     <table className="table table-dark table-sm small">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Amount (eth)</th>
+          <th></th>
+        </tr>
+      </thead>
       <tbody>
         <tr>
           <td>Royalties to Withdraw</td>
@@ -115,13 +121,10 @@ const calculateDirectSales = (allOwnerSales) => {
   return ether(totalDirectSales)
 }
 
-class RoyaltyStatus extends Component {
+class Financials extends Component {
   render() {
     return (
       <div className="card bg-dark text-white">
-        <div className="card-header">
-          Financials
-        </div>
         <div className="card-body">
           { this.props.showAll ? showFinancials(this.props) : <Spinner type="table" /> }
         </div>
@@ -151,4 +154,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps)(RoyaltyStatus)
+export default connect(mapStateToProps)(Financials)

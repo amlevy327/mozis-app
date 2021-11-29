@@ -45,6 +45,12 @@ const showAllNFTs = (props) => {
               <td>{nft.id}</td>
               <td>{nft.value}</td>
               <td>{nft.numberForSale}</td>
+              <td>{showFormattedPrice(nft.min)}</td>
+              <td>{showFormattedPrice(nft.max)}</td>
+              <td>{nft.showPrice}</td>
+              <td>{showFormattedNumber(nft.numberSales)}</td>
+              <td>{showFormattedPrice(nft.lastSalePrice)}</td>
+              {/* <td>{showFormattedPrice(nft.directSalePrice)}</td> */}
             </tr>
           )
         })
@@ -54,6 +60,22 @@ const showAllNFTs = (props) => {
   } else {
     console.log("AML lengths are NOT equal")
     return(<div></div>)
+  }
+}
+
+const showFormattedPrice = (price) => {
+  if (price === 0 ) {
+    return "No Sales"
+  } else {
+    return ether(price)
+  }
+}
+
+const showFormattedNumber = (number) => {
+  if (number === 0 ) {
+    return "No Sales"
+  } else {
+    return number
   }
 }
 
@@ -194,7 +216,8 @@ class AllNFTs extends Component {
     return (
       <div className="card bg-dark text-white">
         <div className="card-header">
-          { showUserType(this.props) }
+          {/* { showUserType(this.props) } */}
+          Landing Page
         </div>
         <div className="card-body">
           <Tabs defaultActiveKey="collection" className="bg-dark text-white">
@@ -207,6 +230,10 @@ class AllNFTs extends Component {
                     <th>NFT ID</th>
                     <th># Minted</th>
                     <th># For Sale</th>
+                    <th>History Min Price</th>
+                    <th>History Max Price</th>
+                    <th># Sales</th>
+                    <th>Last Sale Price (eth)</th>
                   </tr>
                 </thead>
                 { this.props.showAll ? showAllNFTs(this.props) : <Spinner type="table"/> }

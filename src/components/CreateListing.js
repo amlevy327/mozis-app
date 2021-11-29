@@ -36,7 +36,7 @@ const showForm = (props) => {
   } = props
 
   return(
-    <form onSubmit={(event) => {
+    <form id="NewListing" onSubmit={(event) => {
       event.preventDefault()
       console.log('AML submitted new listing')
       checkNewListingInputs(account, exchange, token, tokenId, value, price, myNFTs, dispatch, approvalStatus)
@@ -96,6 +96,7 @@ const checkNewListingInputs = (account, exchange, token, tokenId, value, price, 
   console.log('AML approvalStatus: ', approvalStatus)
 
   createListing(account, exchange, token, tokenId, value, price.toString(), dispatch, approvalStatus) // TODO: check own token id, own value
+  .then(document.getElementById("NewListing").reset()) 
 }
 
 class CreateListing extends Component {
@@ -103,7 +104,7 @@ class CreateListing extends Component {
     return (
       <div className="card bg-dark text-white">
         <div className="card-header">
-            Create Listing
+            Create Listing (this will be a pop up)
         </div>
         <div className="card-body">
           { showForm(this.props) }
