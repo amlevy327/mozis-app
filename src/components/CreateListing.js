@@ -7,10 +7,13 @@ import {
   newListingPriceChanged,
 } from '../store/actions'
 import {
-  createListing
+  createListing,
+  approveExchange
 } from '../store/interactions'
 import {
   accountSelector,
+  approvalForAllLoadedSelector,
+  exchangeApprovalStatusSelector,
   exchangeSelector,
   myNFTsSelector,
   newListingPriceSelector,
@@ -28,15 +31,15 @@ const showForm = (props) => {
     tokenId,
     value,
     price,
-    myNFTs
+    myNFTs,
+    approvalStatus
   } = props
 
   return(
     <form onSubmit={(event) => {
       event.preventDefault()
       console.log('AML submitted new listing')
-      checkNewListingInputs(account, exchange, token, tokenId, value, price, myNFTs, dispatch)
-      //createListing(account, exchange, token.address, tokenId, value, price, dispatch) // TODO: check own token id, own value
+      checkNewListingInputs(account, exchange, token, tokenId, value, price, myNFTs, dispatch, approvalStatus)
     }}>
       <div className="form-group small">
         <label>Token ID</label>
@@ -76,7 +79,7 @@ const showForm = (props) => {
   )
 }
 
-const checkNewListingInputs = (account, exchange, token, tokenId, value, price, myNFTs, dispatch) => {
+const checkNewListingInputs = (account, exchange, token, tokenId, value, price, myNFTs, dispatch, approvalStatus) => {
   let nft = myNFTs.filter((nft) => nft.id === tokenId)
   
   if (nft.length === 0) {
@@ -90,7 +93,9 @@ const checkNewListingInputs = (account, exchange, token, tokenId, value, price, 
     return
   }
 
-  createListing(account, exchange, token.options.address, tokenId, value, price.toString(), dispatch) // TODO: check own token id, own value
+  console.log('AML approvalStatus: ', approvalStatus)
+
+  createListing(account, exchange, token, tokenId, value, price.toString(), dispatch, approvalStatus) // TODO: check own token id, own value
 }
 
 class CreateListing extends Component {
@@ -110,14 +115,18 @@ class CreateListing extends Component {
 }
 
 function mapStateToProps(state) {
+  const approvalForAllLoaded = approvalForAllLoadedSelector(state)
+  
   return {
+    showAll: approvalForAllLoaded,
     account: accountSelector(state),
     exchange: exchangeSelector(state),
     token: tokenSelector(state),
     tokenId: newListingTokenIdSelector(state),
     value: newListingValueSelector(state),
     price: newListingPriceSelector(state),
-    myNFTs: myNFTsSelector(state)
+    myNFTs: myNFTsSelector(state),
+    approvalStatus: exchangeApprovalStatusSelector(state)
   }
 }
 

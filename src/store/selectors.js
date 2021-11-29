@@ -309,3 +309,26 @@ export const newListingValueSelector = createSelector(newListingValue, v => v)
 
 const newListingPrice = state => get(state, 'exchange.newListingPrice')
 export const newListingPriceSelector = createSelector(newListingPrice, p => p)
+
+// TODO: move
+
+// const exchangeApproved = state => get(state, 'exchange.newListingPrice')
+// export const newListingPriceSelector = createSelector(exchangeApproved, p => p)
+
+const approvalForAllLoaded = state => get(state, 'token.approvalForAll.loaded')
+export const approvalForAllLoadedSelector = createSelector(approvalForAllLoaded, l => l)
+
+const approvalForAll = state => get(state, 'token.approvalForAll.data')
+
+export const exchangeApprovalStatusSelector = createSelector(approvalForAll, account, exchange, (approvalForAll, account, exchange) => {
+  let approvalStatus = false
+  const approvalsByAccount = approvalForAll.filter((a) => a.account === account)
+
+  for(let i=0;i<approvalsByAccount.length;i++){
+    if(exchange.options.address === approvalsByAccount[i].operator) {
+      approvalStatus = true
+    }
+  }
+  
+  return approvalStatus
+})

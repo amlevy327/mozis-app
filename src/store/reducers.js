@@ -73,6 +73,29 @@ function token(state = {}, action) {
       return { ...state, contractOwner: { loaded: true, address: action.contractOwner} }
     case 'TRANSFER_SINGLES_LOADED':
       return { ...state, transferSingles: { loaded: true, data: action.transferSingles } }
+    case 'APPROVAL_FOR_ALL_LOADED':
+      return { ...state, approvalForAll: { loaded: true, data: action.approvalForAll } }  
+    case 'APPROVING_EXCHANGE':
+      return {
+        ...state,
+        approvalForAll: {
+          loaded: false,
+          data: [
+            ...state.approvalForAll.data,
+          ]
+        }
+      }
+    case 'EXCHANGE_APPROVED':
+      return {
+        ...state,
+        approvalForAll: {
+          loaded: true,
+          data: [
+            ...state.approvalForAll.data,
+            action.approval
+          ]
+        }
+      }
     case 'ALL_NFTS_LOADED':
       return { ...state, allNFTs: { loaded: true, data: action.allNFTs } }
     case 'TOKEN_TRANSERRED_SINGLE':
