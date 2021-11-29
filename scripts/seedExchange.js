@@ -1,5 +1,5 @@
 // set constants
-let URI_STRING = "www.me.com/"
+let URI_STRING = "https://bafybeibrrqtpdtdtknfsuyzzo6n4io36twc6vdmadtqy4jcofz5xnzhxq4.ipfs.dweb.link/"
 let ROYALTY_PERCENT = "1000"
 
 const RoyaltyPayments = artifacts.require('../src/contracts/RoyaltyPayments.sol')

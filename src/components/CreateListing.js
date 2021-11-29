@@ -42,7 +42,7 @@ const showForm = (props) => {
       checkNewListingInputs(account, exchange, token, tokenId, value, price, myNFTs, dispatch, approvalStatus)
     }}>
       <div className="form-group small">
-        <label>Token ID</label>
+        <label>NFT ID</label>
         <div className="input-group"></div>
           <input
           type="text"

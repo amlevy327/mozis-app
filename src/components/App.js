@@ -18,13 +18,16 @@ import {
   loadPaymentsReceived,
   loadPaymentsReleased,
   getTotalShares,
-  loadApprovalForAll
+  loadApprovalForAll,
+  setBlankTokenMetadata
 } from '../store/interactions'
 import {
   accountSelector,
   tokenContractOwnerLoadedSelector,
   tokenContractOwnerSelector,
-  allTransferSinglesLoadedSelector
+  allTransferSinglesLoadedSelector,
+  allNFTsSelector,
+  allNFTsLoadedSelector
 } from '../store/selectors'
 
 import Navbar from './Navbar'
@@ -64,7 +67,8 @@ class App extends Component {
   async loadBlockchainData(props) {
     const {
       account,
-      dispatch
+      dispatch,
+      allNFTs
     } = props
 
 
@@ -101,6 +105,8 @@ class App extends Component {
     await loadPaymentsReceived(royaltyPayments, dispatch)
     await loadPaymentsReleased(royaltyPayments, dispatch)
     await getTotalShares(royaltyPayments, dispatch)
+
+    //await setBlankTokenMetadata(dispatch)
   }
 
   render() {
@@ -120,7 +126,8 @@ function mapStateToProps(state) {
   return {
     account: accountSelector(state),
     showAll: tokenContractOwnerLoaded && allTransferSinglesLoaded,
-    owner: tokenContractOwnerSelector(state)
+    owner: tokenContractOwnerSelector(state),
+    allNFTs: allNFTsSelector(state)
   }
 }
 

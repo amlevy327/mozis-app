@@ -266,3 +266,19 @@ export function newListingPriceChanged(price) {
     price
   }
 }
+
+// token uri
+
+export function tokenMetadataLoaded(tokenMetadata) {
+  console.log('AML tokenMetadataLoaded: ', tokenMetadata)
+  return {
+    type: 'TOKEN_METADATA_LOADED',
+    tokenMetadata
+  }
+}
+
+export function setTokenMetadataBlank() {
+  return {
+    type: 'TOKEN_METADATA_BLANK'
+  }
+}
