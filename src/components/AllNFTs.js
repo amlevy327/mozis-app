@@ -175,7 +175,7 @@ class AllNFTs extends Component {
                     <th>Price (eth)</th>
                     <th>Royalty Amount (eth)</th>
                     <th>Total Cost (eth)</th>
-                    <th>Action</th>
+                    <th></th>
                   </tr>
                 </thead>
                 { this.props.allListingTypesLoaded ? showAllOpenListings(this.props) : <Spinner type="table"/> }

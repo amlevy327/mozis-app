@@ -67,6 +67,26 @@ export function tokenTransferredSingle(transferSingles) {
   }
 }
 
+export function approvalForAllLoaded(approvalForAll) {
+  return {
+    type: 'APPROVAL_FOR_ALL_LOADED',
+    approvalForAll
+  }
+}
+
+export function approvingExchange() {
+  return {
+    type: 'APPROVING_EXCHANGE',
+  }
+}
+
+export function exchangeApproved(approval) {
+  return {
+    type: 'EXCHANGE_APPROVED',
+    approval
+  }
+}
+
 // ROYALTY PAYMENTS
 
 // contract

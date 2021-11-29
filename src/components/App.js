@@ -17,7 +17,8 @@ import {
   loadPayeesAdded,
   loadPaymentsReceived,
   loadPaymentsReleased,
-  getTotalShares
+  getTotalShares,
+  loadApprovalForAll
 } from '../store/interactions'
 import {
   accountSelector,
@@ -90,6 +91,7 @@ class App extends Component {
     
     await loadTokenContractOwner(token, dispatch)
     await loadTokenTransferSingles(token, dispatch)
+    await loadApprovalForAll(token, dispatch)
     await loadListings(exchange, dispatch)
     await loadCancelled(exchange, dispatch)
     await loadSales(exchange, dispatch)

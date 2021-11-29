@@ -26,7 +26,10 @@ import {
   paymentReleasedNewEvent,
   totalSharesLoaded,
   listingCreating,
-  listingCreated
+  listingCreated,
+  approvalForAllLoaded,
+  approvingExchange,
+  exchangeApproved
   /*
   ownershipChanged,
   */
@@ -125,18 +128,7 @@ export const getTotalShares = async (royaltyPayments, dispatch) => {
 
 // update token contract owner? - need this? only Mozis would use this once.
 
-// create listing
 
-export const createListing = async (account, exchange, tokenAddress, tokenId, value, price, dispatch) => {
-  await exchange.methods.createListing(tokenAddress, tokenId, value, price).send({ from: account })
-  .on('transactionHash', (hash) => {
-    dispatch(listingCreating())
-  })
-  .on('error', (error) => {
-    console.log(error)
-    window.alert('There was an error!')
-  })
-}
 
 // cancel listing
 
@@ -160,6 +152,14 @@ export const loadTokenTransferSingles = async (token, dispatch) => {
   const transferSingles = transferSinglesStream.map((event) => event.returnValues)
   dispatch(transferSinglesLoaded(transferSingles))
   dispatch(allNFTsLoaded(transferSingles.filter((t) => t.from === '0x0000000000000000000000000000000000000000')))
+}
+
+// load ApprovalForAll from ERC1155
+export const loadApprovalForAll = async (token, dispatch) => {
+  const approvalForAllStream = await token.getPastEvents('ApprovalForAll', { fromBlock: 0, toBlock: 'latest' })
+  console.log('approvalForAll stream: ', approvalForAllStream)
+  const approvalForAll = approvalForAllStream.map((event) => event.returnValues)
+  dispatch(approvalForAllLoaded(approvalForAll))
 }
 
 // load listings
@@ -222,6 +222,10 @@ export const subscribeToEvents = async (token, exchange, royaltyPayments, dispat
 
   token.events.TransferSingle({}, (error, event) => {
     dispatch(tokenTransferredSingle(event.returnValues))
+  })
+
+  token.events.ApprovalForAll({}, (error, event) => {
+    dispatch(exchangeApproved(event.returnValues))
   })
 
   exchange.events.NewListing({}, (error, event) => {
@@ -288,4 +292,56 @@ export const withdrawRoyalties = async (dispatch, account, royaltyPayments) => {
     console.log(error)
     window.alert('There was an error!')
   })
+}
+
+// Withdraw royalties
+
+export const approveExchange = async (dispatch, account, token, exchange) => {
+
+  
+}
+
+// create listing
+
+// export const createListing = async (account, exchange, tokenAddress, tokenId, value, price, dispatch) => {
+//   await exchange.methods.createListing(tokenAddress, tokenId, value, price).send({ from: account })
+//   .on('transactionHash', (hash) => {
+//     dispatch(listingCreating())
+//   })
+//   .on('error', (error) => {
+//     console.log(error)
+//     window.alert('There was an error!')
+//   })
+// }
+
+// TODO: issue with this
+
+export const createListing = async (account, exchange, token, tokenId, value, price, dispatch, approvalStatus) => {
+  if (approvalStatus == true) {
+    exchange.methods.createListing(token.options.address, tokenId, value, price).send({ from: account })
+    .on('transactionHash', (hash) => {
+      dispatch(listingCreating())
+    })
+    .on('error', (error) => {
+      console.log(error)
+      window.alert('There was an error!')
+    })
+  } else {
+    token.methods.setApprovalForAll(exchange.options.address, true).send({ from: account })
+    .on('transactionHash', (hash) => {
+      dispatch(approvingExchange())
+      exchange.methods.createListing(token.options.address, tokenId, value, price).send({ from: account })
+      .on('transactionHash', (hash) => {
+        dispatch(listingCreating())
+      })
+      .on('error', (error) => {
+        console.log(error)
+        window.alert('There was an error!')
+      })
+    })
+    .on('error', (error) => {
+      console.log(error)
+      window.alert('There was an error!')
+    })
+  }
 }
