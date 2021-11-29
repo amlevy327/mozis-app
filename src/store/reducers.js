@@ -126,6 +126,8 @@ function token(state = {}, action) {
 // EXCHANGE
 
 function exchange(state = {}, action) {
+  let index, data
+
   switch(action.type) {
     case 'EXCHANGE_CONTRACT_LOADED':
       return { ...state, loaded: true, contract: action.contract }
@@ -135,16 +137,38 @@ function exchange(state = {}, action) {
     case 'LISTING_CREATING':
       return { ...state, listingCreating: true }
     case 'LISTING_CREATED':
-      return {
-        ...state,
-        listingCreating: false,
-        allListings: {
-          ...state.allListings,
-          data: [
+      // return {
+      //   ...state,
+      //   listingCreating: false,
+      //   allListings: {
+      //     ...state.allListings,
+      //     data: [
+      //       ...state.allListings.data,
+      //       action.listing
+      //     ]
+      //   }
+      // }
+
+      // prevent duplicate orders
+      index = state.allListings.data.findIndex(listing => listing.listingId === action.listing.listingId)
+      console.log('AML new listing index', index)
+        
+      if(index === -1) {
+          data = [
             ...state.allListings.data,
             action.listing
           ]
-        }
+      } else {
+          data = state.allListings.data
+      }
+
+      return {
+          ...state,
+          listingCreating: false,
+          allListings: {
+              ...state.allListings,
+              data
+          }
       }
 
     case 'CANCELLED_LOADED':
@@ -169,6 +193,7 @@ function exchange(state = {}, action) {
     case 'LISTING_PURCHASING':
         return { ...state, listingPurchasing: true }
     case 'LISTING_PURCHASED':
+      // TODO: need to check for duplicates - needs saleID
       return {
         ...state,
         listingPurchasing: false,
@@ -180,7 +205,6 @@ function exchange(state = {}, action) {
           ]
         }
       }
-    
     case 'NEW_LISTING_TOKEN_ID_CHANGED':
       return { ...state, newListingTokenId: action.tokenId }
     case 'NEW_LISTING_VALUE_CHANGED':

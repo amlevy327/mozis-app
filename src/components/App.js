@@ -19,7 +19,8 @@ import {
   loadPaymentsReleased,
   getTotalShares,
   loadApprovalForAll,
-  setBlankTokenMetadata
+  setBlankTokenMetadata,
+  //getChainlinkData
 } from '../store/interactions'
 import {
   accountSelector,
@@ -107,6 +108,7 @@ class App extends Component {
     await getTotalShares(royaltyPayments, dispatch)
 
     //await setBlankTokenMetadata(dispatch)
+    //await getChainlinkData()
   }
 
   render() {

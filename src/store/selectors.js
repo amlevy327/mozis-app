@@ -210,7 +210,7 @@ const addTotalCost = (listing) => {
 const allNFTsLoaded = state => get(state, 'token.allNFTs.loaded', false)
 export const allNFTsLoadedSelector = createSelector(allNFTsLoaded, nftl => nftl)
 
-export const allNFTsSelector = createSelector(allTransferSingles, allListings, allCancelled, allSales, (allTransferSingles, listings, cancelled, sales) => {
+export const allNFTsSelector = createSelector(allTransferSingles, allListings, allCancelled, allSales, account, (allTransferSingles, listings, cancelled, sales, account) => {
   let allNFTs = allTransferSingles.filter((t) => t.from === FRESH_MINT)
 
   let allOpenListings = reject(listings, (listing) => {
@@ -219,15 +219,19 @@ export const allNFTsSelector = createSelector(allTransferSingles, allListings, a
     return (listingCancelled || listingSold)
   })
 
-  allNFTs = decorateAllNFTs(allNFTs, allOpenListings)
+  allNFTs = decorateAllNFTs(allNFTs, allOpenListings, sales, account)
   
   return allNFTs
 })
 
-const decorateAllNFTs = (allNFTs, allOpenListings) => {
+const decorateAllNFTs = (allNFTs, allOpenListings, allSales, account) => {
   return(
     allNFTs.map((nft) => {
       nft = addNumberForSale(nft, allOpenListings)
+      nft = addMinMaxPrices(nft, allSales)
+      nft = addNumberSales(nft, allSales)
+      nft = addLastSalePrice(nft, allSales)
+      nft = addDirectSalePrice(nft, allSales, account)
       return nft
     })
   )
@@ -245,6 +249,77 @@ const addNumberForSale = (nft, allOpenListings) => {
   return({
     ...nft,
     numberForSale
+  })
+}
+
+const addMinMaxPrices = (nft, allSales) => {
+  let min = 0
+  let max = 0
+
+  for(let i=0;i<allSales.length;i++){
+    if(nft.id === allSales[i].tokenId) {
+      if (allSales[i].price < min ){
+        min = parseInt(allSales[i].price)
+      }
+      if (allSales[i].price > max ){
+        max = parseInt(allSales[i].price)
+      }
+    }
+  }
+
+  return({
+    ...nft,
+    min,
+    max
+  })
+}
+
+const addNumberSales = (nft, allSales) => {
+  let numberSales = 0
+
+  for(let i=0;i<allSales.length;i++){
+    if(nft.id === allSales[i].tokenId) {
+      numberSales += 1
+    }
+  }
+
+  return({
+    ...nft,
+    numberSales
+  })
+}
+
+const addLastSalePrice = (nft, allSales) => {
+  let lastSalePrice = 0
+
+  //allSales = allSales[allSales.length - 1]
+  // TODO: can do better, just get last element for filtered
+
+  for(let i=0;i<allSales.length;i++){
+    if(nft.id === allSales[i].tokenId) {
+      lastSalePrice = allSales[i].price
+    }
+  }
+
+  return({
+    ...nft,
+    lastSalePrice
+  })
+}
+
+const addDirectSalePrice = (nft, allSales, account) => {
+  let directSalePrice = 0
+  
+  // TODO: AML START HERE 
+  allSales = allSales.filter((s) => nft.id === s.tokenId)
+
+  if(allSales.length > 0) {
+    directSalePrice = allSales[0].price
+  }
+
+  return({
+    ...nft,
+    directSalePrice
   })
 }
 
@@ -315,6 +390,8 @@ export const newListingPriceSelector = createSelector(newListingPrice, p => p)
 // const exchangeApproved = state => get(state, 'exchange.newListingPrice')
 // export const newListingPriceSelector = createSelector(exchangeApproved, p => p)
 
+// EXCHANGE APPROVAL
+
 const approvalForAllLoaded = state => get(state, 'token.approvalForAll.loaded')
 export const approvalForAllLoadedSelector = createSelector(approvalForAllLoaded, l => l)
 
@@ -332,8 +409,14 @@ export const exchangeApprovalStatusSelector = createSelector(approvalForAll, acc
   return approvalStatus
 })
 
+// TOKEN METADATA
+
 const tokensMetadataLoaded = state => get(state, 'token.metadata.loaded', false)
 export const tokensMetadataLoadedSelector = createSelector(tokensMetadataLoaded, l => l)
 
 const tokensMetadata = state => get(state, 'token.metadata.data', [])
 export const tokensMetadataSelector = createSelector(tokensMetadata, tm => tm)
+
+// MIN, MAX SALE PRICE
+
+
