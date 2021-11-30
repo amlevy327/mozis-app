@@ -207,10 +207,16 @@ const addTotalCost = (listing) => {
 
 // TODO: move
 
+const priceEthUsd = state => get(state, 'exchange.priceEthUsd.price')
+export const priceEthUsdSelector = priceEthUsd(exchange, p => p)
+
+const priceEthUsdLoaded = state => get(state, 'exchange.priceEthUsd.loaded', false)
+export const priceEthUsdLoadedSelector = createSelector(priceEthUsdLoaded, l => l)
+
 const allNFTsLoaded = state => get(state, 'token.allNFTs.loaded', false)
 export const allNFTsLoadedSelector = createSelector(allNFTsLoaded, nftl => nftl)
 
-export const allNFTsSelector = createSelector(allTransferSingles, allListings, allCancelled, allSales, account, (allTransferSingles, listings, cancelled, sales, account) => {
+export const allNFTsSelector = createSelector(allTransferSingles, allListings, allCancelled, allSales, priceEthUsd, (allTransferSingles, listings, cancelled, sales, priceEthUsd) => {
   let allNFTs = allTransferSingles.filter((t) => t.from === FRESH_MINT)
 
   let allOpenListings = reject(listings, (listing) => {
@@ -219,19 +225,19 @@ export const allNFTsSelector = createSelector(allTransferSingles, allListings, a
     return (listingCancelled || listingSold)
   })
 
-  allNFTs = decorateAllNFTs(allNFTs, allOpenListings, sales, account)
+  allNFTs = decorateAllNFTs(allNFTs, allOpenListings, sales, priceEthUsd)
   
   return allNFTs
 })
 
-const decorateAllNFTs = (allNFTs, allOpenListings, allSales, account) => {
+const decorateAllNFTs = (allNFTs, allOpenListings, allSales, priceEthUsd) => {
   return(
     allNFTs.map((nft) => {
       nft = addNumberForSale(nft, allOpenListings)
       nft = addMinMaxPrices(nft, allSales)
       nft = addNumberSales(nft, allSales)
       nft = addLastSalePrice(nft, allSales)
-      nft = addDirectSalePrice(nft, allSales, account)
+      nft = addDirectSalePrice(nft, allSales, priceEthUsd)
       return nft
     })
   )
@@ -307,19 +313,24 @@ const addLastSalePrice = (nft, allSales) => {
   })
 }
 
-const addDirectSalePrice = (nft, allSales, account) => {
-  let directSalePrice = 0
+const addDirectSalePrice = (nft, allSales, priceEthUsd) => {
+  let directSalePriceEth = 0
+  let directSalePriceUsd = 0
   
   // TODO: AML START HERE 
   allSales = allSales.filter((s) => nft.id === s.tokenId)
 
   if(allSales.length > 0) {
-    directSalePrice = allSales[0].price
+    directSalePriceEth = allSales[0].price
+    directSalePriceUsd = directSalePriceEth * priceEthUsd
   }
+
+  console.log('ZZZZ priceEthUsd: ', priceEthUsd)
 
   return({
     ...nft,
-    directSalePrice
+    directSalePriceEth,
+    directSalePriceUsd
   })
 }
 
@@ -347,6 +358,8 @@ const decorateMyNFTs = (allSales, allNFTs, account, allOpenListings) => {
     })
   )
 }
+
+
 
 const addCurrentValue = (allSales, nft, account, allNFTs) => {
   let currentValue = 0

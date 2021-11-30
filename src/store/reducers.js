@@ -212,7 +212,11 @@ function exchange(state = {}, action) {
     case 'NEW_LISTING_PRICE_CHANGED':
       return { ...state, newListingPrice: action.price }
     
+    case 'CHAINLINK_PRICE_ETH_USD_LOADED':
+      return { ...state, priceEthUsd: { loaded: true, price: action.price } }
+    
     default:
+      console.log('ZZZ default: ', action.type)
       return state
   }
 }

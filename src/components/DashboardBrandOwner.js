@@ -6,12 +6,12 @@ import Financials from './Financials'
 import SalesStatistics from './SalesStatistics'
 
 class DashboardBrandOwner extends Component {
-  componentWillMount() {
-    this.loadBlockchainData(this.props)
-  }
+  // componentWillMount() {
+  //   this.loadBlockchainData(this.props)
+  // }
 
-  async loadBlockchainData(props) {
-  }
+  // async loadBlockchainData(props) {
+  // }
 
   render() {
     return (
@@ -34,7 +34,11 @@ class DashboardBrandOwner extends Component {
   }
 }
 
+//export default DashboardBrandOwner
 function mapStateToProps(state) {
+  
+  return {
+  }
 }
 
 export default connect(mapStateToProps)(DashboardBrandOwner)

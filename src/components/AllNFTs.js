@@ -50,7 +50,6 @@ const showAllNFTs = (props) => {
               <td>{nft.showPrice}</td>
               <td>{showFormattedNumber(nft.numberSales)}</td>
               <td>{showFormattedPrice(nft.lastSalePrice)}</td>
-              {/* <td>{showFormattedPrice(nft.directSalePrice)}</td> */}
             </tr>
           )
         })
