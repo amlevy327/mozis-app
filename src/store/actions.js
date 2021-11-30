@@ -282,3 +282,13 @@ export function setTokenMetadataBlank() {
     type: 'TOKEN_METADATA_BLANK'
   }
 }
+
+// chainlink price
+
+export function chainlinkPriceEthUsdLoaded(price) {
+  console.log('AML chainlinkPriceEthUsdLoaded: ', price)
+  return {
+    type: 'CHAINLINK_PRICE_ETH_USD_LOADED',
+    price
+  }
+}

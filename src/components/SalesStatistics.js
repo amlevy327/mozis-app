@@ -4,10 +4,9 @@ import Spinner from './Spinner'
 import {
   allNFTsSelector,
   allNFTsLoadedSelector,
-  tokensMetadataSelector
+  tokensMetadataSelector,
+  priceEthUsdLoadedSelector
 } from '../store/selectors'
-import {
-} from '../store/interactions'
 import { ether } from '../helpers.js'
 
 const showStatistics = (props) => {
@@ -15,7 +14,7 @@ const showStatistics = (props) => {
     allNFTs,
     tokensMetadata
   } = props
-
+  
   if (allNFTs.length === tokensMetadata.length) {
     console.log("AML lengths are equal")
     return(
@@ -29,7 +28,8 @@ const showStatistics = (props) => {
               <td>{tokensMetadata[nft.id].name}</td>
               <td>{nft.id}</td>
               <td>{nft.value}</td>
-              <td>{showFormattedPrice(nft.directSalePrice)}</td>
+              <td>{showFormattedPrice(nft.directSalePriceEth)}</td>
+              <td>{showFormattedPrice(nft.directSalePriceUsd)}</td>
               <td>{showFormattedNumber(nft.numberSales)}</td>
             </tr>
           )
@@ -39,6 +39,7 @@ const showStatistics = (props) => {
     )
   } else {
     console.log("AML lengths are NOT equal")
+    //return(<tbody></tbody>)
     return(<div></div>)
   }
 }
@@ -72,10 +73,12 @@ class SalesStatistics extends Component {
               <th>NFT ID</th>
               <th># Minted</th>
               <th>Direct Sale Price (eth)</th>
+              <th>Direct Sale Price (usd)</th>
               <th># Sales</th>
             </tr>
           </thead>
-          { this.props.showAll ? showStatistics(this.props) : <Spinner type="table"/> }
+          {/* TODO: problem with this */}
+          { this.props.showAll ? showStatistics(this.props) : <Spinner type="table"/> } 
           </table>
         </div>
       </div>
@@ -85,9 +88,10 @@ class SalesStatistics extends Component {
 
 function mapStateToProps(state) {
   const allNFTsLoaded = allNFTsLoadedSelector(state)
+  const priceEthUsdLoaded = priceEthUsdLoadedSelector(state)
 
   return {
-    showAll: allNFTsLoaded,
+    showAll: allNFTsLoaded && priceEthUsdLoaded,
     allNFTs: allNFTsSelector(state),
     tokensMetadata: tokensMetadataSelector(state)
   }

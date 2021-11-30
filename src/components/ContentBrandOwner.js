@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import './App.css'
 import {
   allTransferSinglesLoadedSelector,
-  allListingTypesLoadedSelector
+  allListingTypesLoadedSelector,
+  allNFTsLoadedSelector
 } from '../store/selectors'
 import Spinner from './Spinner'
 import AllNFTs from './AllNFTs'
@@ -26,11 +27,10 @@ class ContentBrandOwner extends Component {
       <div>
         <div className="content">
           <div className="vertical-split">
-            {/* { this.props.showAllNFTsComponent ? <Financials /> : <Spinner type="table"/> } */}
-            { this.props.showAllNFTsComponent ? <DashboardBrandOwner /> : <Spinner type="table"/> }
-            { this.props.showAllNFTsComponent ? <CreateListing /> : <Spinner type="table"/> }
+            { this.props.showAll ? <DashboardBrandOwner /> : <Spinner type="table"/> }
+            { this.props.showAll ? <CreateListing /> : <Spinner type="table"/> }
           </div>
-          { this.props.showAllNFTsComponent ? <AllNFTs /> : <Spinner type="table"/> }
+          { this.props.showAll ? <AllNFTs /> : <Spinner type="table"/> }
         </div>
       </div>
     );
@@ -40,9 +40,10 @@ class ContentBrandOwner extends Component {
 function mapStateToProps(state) {
   const allTransferSinglesLoaded = allTransferSinglesLoadedSelector(state)
   const allListingTypesLoaded = allListingTypesLoadedSelector(state)
+  const allNFTsLoaded = allNFTsLoadedSelector(state)
   
   return {
-    showAllNFTsComponent: allTransferSinglesLoaded && allListingTypesLoaded
+    showAll: allTransferSinglesLoaded && allListingTypesLoaded && allNFTsLoaded
   }
 }
 

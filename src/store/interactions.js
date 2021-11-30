@@ -31,7 +31,8 @@ import {
   approvingExchange,
   exchangeApproved,
   tokenMetadataLoaded,
-  setTokenMetadataBlank
+  setTokenMetadataBlank,
+  chainlinkPriceEthUsdLoaded
   /*
   ownershipChanged,
   */
@@ -379,18 +380,21 @@ export const getTokenMetadata = async (tokenUri, dispatch) => {
 }
 
 // TODO: WIP - chainlink testing
-// export const getChainlinkData = async () => {
-//   const web3 = new Web3("https://api.s0.b.hmny.io");
-//   const aggregatorV3InterfaceABI = [{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"description","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint80","name":"_roundId","type":"uint80"}],"name":"getRoundData","outputs":[{"internalType":"uint80","name":"roundId","type":"uint80"},{"internalType":"int256","name":"answer","type":"int256"},{"internalType":"uint256","name":"startedAt","type":"uint256"},{"internalType":"uint256","name":"updatedAt","type":"uint256"},{"internalType":"uint80","name":"answeredInRound","type":"uint80"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"latestRoundData","outputs":[{"internalType":"uint80","name":"roundId","type":"uint80"},{"internalType":"int256","name":"answer","type":"int256"},{"internalType":"uint256","name":"startedAt","type":"uint256"},{"internalType":"uint256","name":"updatedAt","type":"uint256"},{"internalType":"uint80","name":"answeredInRound","type":"uint80"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"version","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}];
-//   const addr = "0x4f11696cE92D78165E1F8A9a4192444087a45b64"; // ETH / USD
-//   const priceFeed = new web3.eth.Contract(aggregatorV3InterfaceABI, addr);
-//   priceFeed.methods.latestRoundData().call()
-//   .then((roundData) => {
-//       // Do something with roundData
-//       console.log("ZZZ Latest Round Data", roundData)
-//       console.log("ZZZ Latest Round Data - price formatted", roundData.answer / 10 ** 8)
-//   });
-
+export const getChainlinkPriceEthUsd = async (dispatch) => {
+  const web3 = new Web3("https://api.s0.b.hmny.io");
+  const aggregatorV3InterfaceABI = [{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"description","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint80","name":"_roundId","type":"uint80"}],"name":"getRoundData","outputs":[{"internalType":"uint80","name":"roundId","type":"uint80"},{"internalType":"int256","name":"answer","type":"int256"},{"internalType":"uint256","name":"startedAt","type":"uint256"},{"internalType":"uint256","name":"updatedAt","type":"uint256"},{"internalType":"uint80","name":"answeredInRound","type":"uint80"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"latestRoundData","outputs":[{"internalType":"uint80","name":"roundId","type":"uint80"},{"internalType":"int256","name":"answer","type":"int256"},{"internalType":"uint256","name":"startedAt","type":"uint256"},{"internalType":"uint256","name":"updatedAt","type":"uint256"},{"internalType":"uint80","name":"answeredInRound","type":"uint80"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"version","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}];
+  const addr = "0x4f11696cE92D78165E1F8A9a4192444087a45b64"; // ETH / USD
+  const priceFeed = new web3.eth.Contract(aggregatorV3InterfaceABI, addr);
+  priceFeed.methods.latestRoundData().call()
+  .then((roundData) => {
+      // Do something with roundData
+      console.log("ZZZ Latest Round Data", roundData)
+      console.log("ZZZ Latest Round Data - price formatted", roundData.answer / 10 ** 8)
+      let price = roundData.answer / 10 ** 8
+      dispatch(chainlinkPriceEthUsdLoaded(price))
+      //return price
+  });
+}
 
 
 
@@ -402,4 +406,3 @@ export const getTokenMetadata = async (tokenUri, dispatch) => {
   //   console.log(error)
   //   window.alert('There was an error!')
   // })
-// }

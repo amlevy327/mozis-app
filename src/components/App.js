@@ -20,7 +20,7 @@ import {
   getTotalShares,
   loadApprovalForAll,
   setBlankTokenMetadata,
-  //getChainlinkData
+  getChainlinkPriceEthUsd
 } from '../store/interactions'
 import {
   accountSelector,
@@ -61,15 +61,13 @@ const showContent = (props) => {
 
 class App extends Component {
   componentWillMount() {
-    //this.loadBlockchainData(this.props.dispatch)
     this.loadBlockchainData(this.props)
   }
 
   async loadBlockchainData(props) {
     const {
       account,
-      dispatch,
-      allNFTs
+      dispatch
     } = props
 
 
@@ -108,7 +106,7 @@ class App extends Component {
     await getTotalShares(royaltyPayments, dispatch)
 
     //await setBlankTokenMetadata(dispatch)
-    //await getChainlinkData()
+    await getChainlinkPriceEthUsd(dispatch)
   }
 
   render() {
