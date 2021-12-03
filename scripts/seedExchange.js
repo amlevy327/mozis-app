@@ -1,5 +1,5 @@
 // set constants
-let URI_STRING = "https://bafybeibrrqtpdtdtknfsuyzzo6n4io36twc6vdmadtqy4jcofz5xnzhxq4.ipfs.dweb.link/"
+let URI_STRING = "https://bafybeibm5eylnqsus7bpmi33dlsswmvlmfc3gbl7vfjj6oebili454ipni.ipfs.dweb.link/"
 let ROYALTY_PERCENT = "1000"
 
 const RoyaltyPayments = artifacts.require('../src/contracts/RoyaltyPayments.sol')
@@ -57,6 +57,7 @@ module.exports = async function(callback) {
     await token.transferOwnership(artist, { from: mozisDeployer })
     console.log('Ownership transferred to artist')
 
+    /*
     // approve exchange to move tokens - artist
     await token.setApprovalForAll(exchange.address, true, { from: artist })
     console.log('Exchange approved by artist')
@@ -65,6 +66,7 @@ module.exports = async function(callback) {
     await exchange.createListing(token.address, 0, 1, web3.utils.toWei('1', 'ether'), { from: artist })
     await wait(1)
     console.log('listing 1 created- tokenId: 0, value: 1, price: 1eth')
+    */
 
     // await exchange.createListing(token.address, 1, 1, web3.utils.toWei('2', 'ether'), { from: artist })
     // await wait(1)

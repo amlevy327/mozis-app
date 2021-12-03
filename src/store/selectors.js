@@ -258,6 +258,7 @@ const addNumberForSale = (nft, allOpenListings) => {
   })
 }
 
+// TODO: min not correct
 const addMinMaxPrices = (nft, allSales) => {
   let min = 0
   let max = 0
