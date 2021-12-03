@@ -9,10 +9,17 @@ import "./ERC2981Collection.sol";
 
 contract Token is ERC1155, Ownable, ERC2981Collection {
 
-    // CUSTOM FOR CUSTOMER
-    uint256 public constant PENGUIN0 = 0;
-    uint256 public constant PENGUIN1 = 1;
-    uint256 public constant PENGUIN2 = 2;
+    // // CUSTOM FOR CUSTOMER
+    // uint256 public constant PENGUIN0 = 0;
+    // uint256 public constant PENGUIN1 = 1;
+    // uint256 public constant PENGUIN2 = 2;
+    // //
+
+    // NEAL EXAMPLE
+    uint256 public constant SERENA0 = 0;
+    uint256 public constant SERENA1 = 1;
+    uint256 public constant SERENA2 = 2;
+    uint256 public constant SERENA3 = 3;
     //
 
     constructor (
@@ -25,10 +32,17 @@ contract Token is ERC1155, Ownable, ERC2981Collection {
     ) {
         _setRoyalties(_royaltyAddress, _royaltyPercent);
 
-        // CUSTOM FOR CUSTOMER
-        _mint(_artist, PENGUIN0, 1, "");
-        _mint(_artist, PENGUIN1, 1, "");
-        _mint(_artist, PENGUIN2, 1, "");
+        // // CUSTOM FOR CUSTOMER
+        // _mint(_artist, PENGUIN0, 1, "");
+        // _mint(_artist, PENGUIN1, 1, "");
+        // _mint(_artist, PENGUIN2, 1, "");
+        // //
+
+        // NEAL EXAMPLE
+        _mint(_artist, SERENA0, 1, "");
+        _mint(_artist, SERENA1, 3, "");
+        _mint(_artist, SERENA2, 2, "");
+        _mint(_artist, SERENA3, 20, "");
         //
     }
     
@@ -36,7 +50,8 @@ contract Token is ERC1155, Ownable, ERC2981Collection {
     function uri(uint256 _tokenId) public view virtual override returns (string memory) {
         return string(
             abi.encodePacked(
-                "https://bafybeibrrqtpdtdtknfsuyzzo6n4io36twc6vdmadtqy4jcofz5xnzhxq4.ipfs.dweb.link/",
+                // Neal example
+                "https://bafybeibm5eylnqsus7bpmi33dlsswmvlmfc3gbl7vfjj6oebili454ipni.ipfs.dweb.link/",
                 Strings.toString(_tokenId),
                 ".json"
                 )

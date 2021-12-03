@@ -101,24 +101,33 @@ const calculateTotalAvailableToWithdraw = (royaltyPaymentsReceived, royaltyPayme
 const calculateTotalReleased = (royaltyPaymentsReleased) => {
   let totalReleased = 0
 
-  for(let i=0;i<royaltyPaymentsReleased.length;i++){
-    if (royaltyPaymentsReleased[i]){
-      totalReleased += parseInt(royaltyPaymentsReleased[i].amount)
+  if (royaltyPaymentsReleased.length == 0) {
+    return totalReleased
+  } else {
+    for(let i=0;i<royaltyPaymentsReleased.length;i++){
+      if (royaltyPaymentsReleased[i]){
+        totalReleased += parseInt(royaltyPaymentsReleased[i].amount)
+      }
     }
+    console.log('calculateTotalReleased: ', totalReleased)
+    return ether(totalReleased)
   }
-  return ether(totalReleased)
 }
 
 const calculateDirectSales = (allOwnerSales) => {
   let totalDirectSales = 0
-  
-  for(let i=0;i<allOwnerSales.length;i++){
-    if (allOwnerSales[i]){
-      totalDirectSales += parseInt(allOwnerSales[i].price)
-    }
-  }
 
-  return ether(totalDirectSales)
+  if (allOwnerSales.length == 0) {
+    return totalDirectSales
+  } else {
+    for(let i=0;i<allOwnerSales.length;i++){
+      if (allOwnerSales[i]){
+        totalDirectSales += parseInt(allOwnerSales[i].price)
+      }
+    }
+  
+    return ether(totalDirectSales)
+  }
 }
 
 class Financials extends Component {
