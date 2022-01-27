@@ -85,7 +85,7 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\nimport \"./interface/IERC2981.sol\";\n\nabstract contract ERC2981Collection is IERC2981 {\n\n  // ERC165\n  // _setRoyalties(address,uint256) => 0x40a04a5a\n  // royaltyInfo(uint256,uint256) => 0x2a55205a\n  // ERC2981Collection => 0x6af56a00\n\n  address public royaltyAddress;\n  uint256 public royaltyPercent;\n\n  // Set to be internal function _setRoyalties\n  // _setRoyalties(address,uint256) => 0x40a04a5a\n  function _setRoyalties(address _receiver, uint256 _percentage) internal {\n    royaltyAddress = _receiver;\n    royaltyPercent = _percentage;\n  }\n\n  // Override for royaltyInfo(uint256, uint256)\n  // royaltyInfo(uint256,uint256) => 0x2a55205a\n  function royaltyInfo(\n    uint256 ,\n    uint256 _salePrice\n  ) external view override(IERC2981) returns (\n    address receiver,\n    uint256 royaltyAmount\n  ) {\n    receiver = royaltyAddress;\n\n    // This sets percentages by price * percentage / 10000\n    royaltyAmount = _salePrice * royaltyPercent / 10000;\n  }\n}",
-  "sourcePath": "/Users/andrewmlevy/Documents/blockchain/4_portfolio_projects/mozis-app/src/contracts/ERC2981Collection.sol",
+  "sourcePath": "/Users/andrewmlevy/Desktop/mozis-check/mozis-app/src/contracts/ERC2981Collection.sol",
   "ast": {
     "absolutePath": "project:/src/contracts/ERC2981Collection.sol",
     "exportedSymbols": {
@@ -96,7 +96,7 @@
         2753
       ],
       "IERC2981": [
-        3310
+        3353
       ]
     },
     "id": 2806,
@@ -123,7 +123,7 @@
         "id": 2756,
         "nodeType": "ImportDirective",
         "scope": 2806,
-        "sourceUnit": 3311,
+        "sourceUnit": 3354,
         "src": "66:34:14",
         "symbolAliases": [],
         "unitAlias": ""
@@ -136,7 +136,7 @@
               "id": 2757,
               "name": "IERC2981",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 3310,
+              "referencedDeclaration": 3353,
               "src": "141:8:14"
             },
             "id": 2758,
@@ -146,14 +146,14 @@
         ],
         "contractDependencies": [
           2753,
-          3310
+          3353
         ],
         "contractKind": "contract",
         "fullyImplemented": false,
         "id": 2805,
         "linearizedBaseContracts": [
           2805,
-          3310,
+          3353,
           2753
         ],
         "name": "ERC2981Collection",
@@ -388,7 +388,7 @@
           },
           {
             "baseFunctions": [
-              3309
+              3352
             ],
             "body": {
               "id": 2803,
@@ -562,7 +562,7 @@
                   "id": 2784,
                   "name": "IERC2981",
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 3310,
+                  "referencedDeclaration": 3353,
                   "src": "796:8:14"
                 }
               ],
@@ -710,7 +710,7 @@
         2753
       ],
       "IERC2981": [
-        3310
+        3353
       ]
     },
     "id": 2806,
@@ -737,7 +737,7 @@
         "id": 2756,
         "nodeType": "ImportDirective",
         "scope": 2806,
-        "sourceUnit": 3311,
+        "sourceUnit": 3354,
         "src": "66:34:14",
         "symbolAliases": [],
         "unitAlias": ""
@@ -750,7 +750,7 @@
               "id": 2757,
               "name": "IERC2981",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 3310,
+              "referencedDeclaration": 3353,
               "src": "141:8:14"
             },
             "id": 2758,
@@ -760,14 +760,14 @@
         ],
         "contractDependencies": [
           2753,
-          3310
+          3353
         ],
         "contractKind": "contract",
         "fullyImplemented": false,
         "id": 2805,
         "linearizedBaseContracts": [
           2805,
-          3310,
+          3353,
           2753
         ],
         "name": "ERC2981Collection",
@@ -1002,7 +1002,7 @@
           },
           {
             "baseFunctions": [
-              3309
+              3352
             ],
             "body": {
               "id": 2803,
@@ -1176,7 +1176,7 @@
                   "id": 2784,
                   "name": "IERC2981",
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 3310,
+                  "referencedDeclaration": 3353,
                   "src": "796:8:14"
                 }
               ],
@@ -1319,8 +1319,8 @@
     "version": "0.8.0+commit.c7dfd78e.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.4.3",
-  "updatedAt": "2021-11-26T03:45:25.621Z",
+  "schemaVersion": "3.4.4",
+  "updatedAt": "2022-01-27T18:07:57.734Z",
   "devdoc": {
     "kind": "dev",
     "methods": {

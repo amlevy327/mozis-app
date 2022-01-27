@@ -59,7 +59,7 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\nimport \"@openzeppelin/contracts/utils/introspection/IERC165.sol\";\n\ninterface IERC2981 is IERC165 {\n  // ERC165 bytes to add to interface array - set in parent contract\n  // implementing this standard\n  //\n  // bytes4(keccak256(\"royaltyInfo(uint256,uint256)\")) == 0x2a55205a\n  // bytes4 private constant _INTERFACE_ID_ERC2981 = 0x2a55205a;\n  // _registerInterface(_INTERFACE_ID_ERC2981);\n\n  // @notice Called with the sale price to determine how much royalty\n  //  is owed and to whom.\n  // @param _tokenId - the NFT asset queried for royalty information\n  // @param _salePrice - the sale price of the NFT asset specified by _tokenId\n  // @return receiver - address of who should be sent the royalty payment\n  // @return royaltyAmount - the royalty payment amount for _salePrice\n  \n  function royaltyInfo(uint256 _tokenId, uint256 _salePrice) external view returns (address receiver, uint256 royaltyAmount);\n}",
-  "sourcePath": "/Users/andrewmlevy/Documents/blockchain/4_portfolio_projects/mozis-app/src/contracts/interface/IERC2981.sol",
+  "sourcePath": "/Users/andrewmlevy/Desktop/mozis-check/mozis-app/src/contracts/interface/IERC2981.sol",
   "ast": {
     "absolutePath": "project:/src/contracts/interface/IERC2981.sol",
     "exportedSymbols": {
@@ -67,15 +67,15 @@
         2753
       ],
       "IERC2981": [
-        3310
+        3353
       ]
     },
-    "id": 3311,
+    "id": 3354,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3295,
+        "id": 3338,
         "literals": [
           "solidity",
           ">=",
@@ -86,16 +86,16 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "32:32:18"
+        "src": "32:32:19"
       },
       {
         "absolutePath": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
         "file": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
-        "id": 3296,
+        "id": 3339,
         "nodeType": "ImportDirective",
-        "scope": 3311,
+        "scope": 3354,
         "sourceUnit": 2754,
-        "src": "66:65:18",
+        "src": "66:65:19",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -104,15 +104,15 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 3297,
+              "id": 3340,
               "name": "IERC165",
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 2753,
-              "src": "155:7:18"
+              "src": "155:7:19"
             },
-            "id": 3298,
+            "id": 3341,
             "nodeType": "InheritanceSpecifier",
-            "src": "155:7:18"
+            "src": "155:7:19"
           }
         ],
         "contractDependencies": [
@@ -120,9 +120,9 @@
         ],
         "contractKind": "interface",
         "fullyImplemented": false,
-        "id": 3310,
+        "id": 3353,
         "linearizedBaseContracts": [
-          3310,
+          3353,
           2753
         ],
         "name": "IERC2981",
@@ -130,24 +130,24 @@
         "nodes": [
           {
             "functionSelector": "2a55205a",
-            "id": 3309,
+            "id": 3352,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "royaltyInfo",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3303,
+              "id": 3346,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3300,
+                  "id": 3343,
                   "mutability": "mutable",
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3309,
-                  "src": "870:16:18",
+                  "scope": 3352,
+                  "src": "870:16:19",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -155,10 +155,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3299,
+                    "id": 3342,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "870:7:18",
+                    "src": "870:7:19",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -168,12 +168,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 3302,
+                  "id": 3345,
                   "mutability": "mutable",
                   "name": "_salePrice",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3309,
-                  "src": "888:18:18",
+                  "scope": 3352,
+                  "src": "888:18:19",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -181,10 +181,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3301,
+                    "id": 3344,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "888:7:18",
+                    "src": "888:7:19",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -193,20 +193,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "869:38:18"
+              "src": "869:38:19"
             },
             "returnParameters": {
-              "id": 3308,
+              "id": 3351,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3305,
+                  "id": 3348,
                   "mutability": "mutable",
                   "name": "receiver",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3309,
-                  "src": "931:16:18",
+                  "scope": 3352,
+                  "src": "931:16:19",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -214,10 +214,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3304,
+                    "id": 3347,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "931:7:18",
+                    "src": "931:7:19",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -228,12 +228,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 3307,
+                  "id": 3350,
                   "mutability": "mutable",
                   "name": "royaltyAmount",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3309,
-                  "src": "949:21:18",
+                  "scope": 3352,
+                  "src": "949:21:19",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -241,10 +241,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3306,
+                    "id": 3349,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "949:7:18",
+                    "src": "949:7:19",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -253,20 +253,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "930:41:18"
+              "src": "930:41:19"
             },
-            "scope": 3310,
-            "src": "849:123:18",
+            "scope": 3353,
+            "src": "849:123:19",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 3311,
-        "src": "133:841:18"
+        "scope": 3354,
+        "src": "133:841:19"
       }
     ],
-    "src": "32:942:18"
+    "src": "32:942:19"
   },
   "legacyAST": {
     "absolutePath": "project:/src/contracts/interface/IERC2981.sol",
@@ -275,15 +275,15 @@
         2753
       ],
       "IERC2981": [
-        3310
+        3353
       ]
     },
-    "id": 3311,
+    "id": 3354,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 3295,
+        "id": 3338,
         "literals": [
           "solidity",
           ">=",
@@ -294,16 +294,16 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "32:32:18"
+        "src": "32:32:19"
       },
       {
         "absolutePath": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
         "file": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
-        "id": 3296,
+        "id": 3339,
         "nodeType": "ImportDirective",
-        "scope": 3311,
+        "scope": 3354,
         "sourceUnit": 2754,
-        "src": "66:65:18",
+        "src": "66:65:19",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -312,15 +312,15 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 3297,
+              "id": 3340,
               "name": "IERC165",
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 2753,
-              "src": "155:7:18"
+              "src": "155:7:19"
             },
-            "id": 3298,
+            "id": 3341,
             "nodeType": "InheritanceSpecifier",
-            "src": "155:7:18"
+            "src": "155:7:19"
           }
         ],
         "contractDependencies": [
@@ -328,9 +328,9 @@
         ],
         "contractKind": "interface",
         "fullyImplemented": false,
-        "id": 3310,
+        "id": 3353,
         "linearizedBaseContracts": [
-          3310,
+          3353,
           2753
         ],
         "name": "IERC2981",
@@ -338,24 +338,24 @@
         "nodes": [
           {
             "functionSelector": "2a55205a",
-            "id": 3309,
+            "id": 3352,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "royaltyInfo",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 3303,
+              "id": 3346,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3300,
+                  "id": 3343,
                   "mutability": "mutable",
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3309,
-                  "src": "870:16:18",
+                  "scope": 3352,
+                  "src": "870:16:19",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -363,10 +363,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3299,
+                    "id": 3342,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "870:7:18",
+                    "src": "870:7:19",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -376,12 +376,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 3302,
+                  "id": 3345,
                   "mutability": "mutable",
                   "name": "_salePrice",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3309,
-                  "src": "888:18:18",
+                  "scope": 3352,
+                  "src": "888:18:19",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -389,10 +389,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3301,
+                    "id": 3344,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "888:7:18",
+                    "src": "888:7:19",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -401,20 +401,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "869:38:18"
+              "src": "869:38:19"
             },
             "returnParameters": {
-              "id": 3308,
+              "id": 3351,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 3305,
+                  "id": 3348,
                   "mutability": "mutable",
                   "name": "receiver",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3309,
-                  "src": "931:16:18",
+                  "scope": 3352,
+                  "src": "931:16:19",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -422,10 +422,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 3304,
+                    "id": 3347,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "931:7:18",
+                    "src": "931:7:19",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -436,12 +436,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 3307,
+                  "id": 3350,
                   "mutability": "mutable",
                   "name": "royaltyAmount",
                   "nodeType": "VariableDeclaration",
-                  "scope": 3309,
-                  "src": "949:21:18",
+                  "scope": 3352,
+                  "src": "949:21:19",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -449,10 +449,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 3306,
+                    "id": 3349,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "949:7:18",
+                    "src": "949:7:19",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -461,28 +461,28 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "930:41:18"
+              "src": "930:41:19"
             },
-            "scope": 3310,
-            "src": "849:123:18",
+            "scope": 3353,
+            "src": "849:123:19",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 3311,
-        "src": "133:841:18"
+        "scope": 3354,
+        "src": "133:841:19"
       }
     ],
-    "src": "32:942:18"
+    "src": "32:942:19"
   },
   "compiler": {
     "name": "solc",
     "version": "0.8.0+commit.c7dfd78e.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.4.3",
-  "updatedAt": "2021-11-26T03:45:25.653Z",
+  "schemaVersion": "3.4.4",
+  "updatedAt": "2022-01-27T18:07:57.775Z",
   "devdoc": {
     "kind": "dev",
     "methods": {
