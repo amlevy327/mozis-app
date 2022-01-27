@@ -1,3 +1,85 @@
+# Name
+mozis-app
+
+# Description
+
+A one page NFT marketplace from brands
+
+# Requirements
+
+For Rinkeby interaction and deployment:
+- Install [MetaMask](https://metamask.io/download) and create a free account
+- Obtain [Rinkeby test ETH](https://faucet.rinkeby.io/)
+
+For local deployment:
+- Install [MetaMask](https://metamask.io/download) and create a free account
+- Install [Ganache](https://trufflesuite.com/ganache/) to run local blockchain
+
+# Usage
+
+## Interact with local clone
+
+### Clone repo and install packages
+
+```
+git clone https://github.com/amlevy327/mozis-app
+cd mozis-app
+npm i
+```
+
+### Test locally
+
+```
+npx truffle test
+```
+
+### Customize your token - update Token.sol
+Modify Token.sol for your custom token.\
+You may change the following parameters:
+- Add constants for each NFT (see Serena example)
+- Add _mint() to contructor for each NFT (see Serena example)
+
+### Customize your token - update migration files
+Modify 2_deploy_contract.js for your custom token.\
+You may change the following parameters:
+- payees
+- shares
+- artist address
+- royalty payments address
+- URI
+- royalty percentage
+
+### Deploy locally
+
+1. Start Ganache on port 7545
+2. [Import](https://metamask.zendesk.com/hc/en-us/articles/360015489331-How-to-import-an-Account) your private key (make sure is a Ganache private key only!)
+3. Start development server and migrate contracts
+```
+npx truffle migrate --network development --reset
+yarn start
+```
+
+## Interact with sample project deployed on Rinkeby test net (not deployed yet)
+
+### Setup .env file
+
+Visit [Infura](https://infura.io/) to create profile and project.\
+Create .env file and add:
+> PRIVATE_KEYS="{YOUR_KEY_HERE}"\
+> INFURA_API_KEY={YOUR_KEY_HERE}
+
+### Deploy on Rinkeby test net
+
+Start development server and migrate contracts
+```
+npx truffle migrate --network rinkeby --reset
+yarn start
+```
+
+
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
